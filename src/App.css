@@ -176,6 +176,19 @@ h3 {
   font-size: 0.85rem;
   font-family: 'Pretendard', sans-serif;
   font-size: 0.875rem;
+
+  -webkit-appearance: none;
+  appearance: none;
+  background-color : #ffffff;
+  color: #1a1a1a;
+}
+
+.setting-item select {
+  background-image: url('/arrow.png');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px 16px;
+  padding-right: 28px;
 }
 
 .color-button-group {
@@ -247,6 +260,16 @@ h3 {
   border-radius: 6px;
   font-size: 0.9rem;
   font-family: 'Pretendard', sans-serif;
+}
+
+.row select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url('/arrow.png');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px 16px;
+  padding-right: 28px !important;
 }
 
 .row input[type="text"] {
