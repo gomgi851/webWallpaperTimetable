@@ -45,9 +45,9 @@ h1 {
 h3 {
   font-family: 'Black Han Sans', sans-serif !important;
   font-weight: 400;
-  font-size: 0.95rem;
+  font-size: 1.28rem;
   margin-top: 0;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   text-align: center;
 }
 
@@ -62,27 +62,40 @@ h3 {
 }
 
 .upload-section {
-  text-align: center;
-  margin-bottom: 15px;
+  text-align: left;
+  margin-bottom: 0;
 }
 
 .upload-row {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
   flex-wrap: wrap;
 }
 
+.upload-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .bg-file-label {
   display: inline-block;
-  padding: 8px 16px;
+  padding: 9px 16px;
   background-color: #4a5568;
-  color: white;
+  color: #ffffff !important;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1;
 }
 
 .bg-file-label:hover {
@@ -104,6 +117,7 @@ h3 {
   margin-bottom: 12px;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: flex-start;
 }
 
 .setting-item {
@@ -115,10 +129,16 @@ h3 {
   display: block;
   font-size: 0.75rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   color: #333;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.color-setting-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .setting-item select,
@@ -137,6 +157,8 @@ h3 {
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: flex-start;
+  min-height: 32px;
 }
 
 .color-button {
@@ -174,8 +196,8 @@ h3 {
 
 .row select,
 .row input {
-  height: 32px;
-  padding: 4px 8px;
+  height: 36px;
+  padding: 6px 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 0.85rem;
@@ -186,13 +208,22 @@ h3 {
   width: 100%;
 }
 
+.mobile-field-label {
+  display: none;
+}
+
 .header-row {
-  background-color: #f8f9fa;
-  padding: 5px 8px;
-  margin-bottom: 10px;
-  border-radius: 6px;
+  display: grid;
+  grid-template-columns: 70px minmax(160px, 0.88fr) minmax(240px, 1.6fr) minmax(140px, 1.22fr) 40px;
+  gap: 8px;
+  align-items: center;
+  padding: 0 0 10px;
+  margin-bottom: 14px;
+  background: transparent !important;
+  border-bottom: 1px dashed #d8dde6;
+  border-radius: 0;
   font-weight: 600;
-  font-size: 0.75rem;
+  font-size: 0.82rem;
 }
 
 .header-row div {
@@ -222,7 +253,7 @@ h3 {
 
 .delete-btn {
   width: 34px;
-  height: 34px;
+  height: 36px;
   padding: 0;
   background-color: #e53e3e;
   color: white;
@@ -240,7 +271,7 @@ h3 {
 
 .add-btn {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #f0f0f0;
   color: #333;
   border: 1px dashed #ccc;
@@ -264,9 +295,10 @@ h3 {
 
 .generate-btn {
   font-family: 'Black Han Sans', sans-serif !important;
-  width: 200px;
-  padding: 12px;
-  font-size: 0.95rem;
+  width: 236px;
+  min-height: 48px;
+  padding: 12px 22px;
+  font-size: 1.2rem;
   background: #3182ce;
   color: white;
   border: none;
@@ -274,6 +306,7 @@ h3 {
   box-shadow: 0 6px 16px rgba(49, 130, 206, 0.25);
   cursor: pointer;
   font-weight: 600;
+  line-height: 1.1;
   transition: all 0.3s;
 }
 
@@ -298,6 +331,10 @@ h3 {
   .row {
     grid-template-columns: 60px minmax(100px, 0.8fr) minmax(150px, 1.2fr) minmax(100px, 1fr) 36px;
   }
+
+  .header-row {
+    grid-template-columns: 60px minmax(100px, 0.8fr) minmax(150px, 1.2fr) minmax(100px, 1fr) 36px;
+  }
 }
 
 @media (max-width: 720px) {
@@ -308,15 +345,89 @@ h3 {
 
   .settings-row {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .setting-item {
     min-width: unset;
+    width: 100%;
+  }
+
+  .header-row {
+    display: none;
   }
 
   .row {
-    grid-template-columns: 50px 1fr 1fr 1fr 30px;
-    font-size: 0.75rem;
+    grid-template-columns: 64px 1fr 34px;
+    grid-template-areas:
+      "day name delete"
+      "time time time"
+      "room room room";
+    gap: 6px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.12);
+  }
+
+  #schedules-container .row:last-child {
+    margin-bottom: 6px;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .row select.day-select {
+    grid-area: day;
+  }
+
+  .row .name-input {
+    grid-area: name;
+  }
+
+  .row .time-inputs {
+    grid-area: time;
+  }
+
+  .row .room-input {
+    grid-area: room;
+  }
+
+  .row .delete-btn {
+    grid-area: delete;
+    height: 34px;
+    min-height: 34px;
+  }
+
+  .row select,
+  .row input {
+    height: 34px;
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  .time-inputs select {
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 0;
+  }
+
+  .time-inputs {
+    gap: 3px;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .time-inputs span {
+    font-size: 0.78rem;
+    flex: 0 0 10px;
+    text-align: center;
+  }
+
+  .mobile-field-label {
+    display: none;
+  }
+
+  .add-btn {
+    margin-top: 4px;
   }
 
   .generate-btn {

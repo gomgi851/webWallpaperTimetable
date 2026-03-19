@@ -35,8 +35,9 @@ export default function Settings({
       <div className="settings-row">
         <div className="setting-item" style={{ flex: '2' }}>
           <div className="upload-section">
+            <label className="upload-label">배경 선택</label>
             <div className="upload-row">
-              <label htmlFor="bg-file-input" className="bg-file-label">배경 선택</label>
+              <label htmlFor="bg-file-input" className="bg-file-label">choose file</label>
               <input
                 id="bg-file-input"
                 type="file"
@@ -47,7 +48,7 @@ export default function Settings({
             </div>
           </div>
         </div>
-        <div className="setting-item">
+        <div className="setting-item color-setting-item">
           <label>표 색상</label>
           <div className="color-button-group">
             <button

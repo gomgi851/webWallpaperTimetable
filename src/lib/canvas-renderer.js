@@ -60,8 +60,10 @@ export class TimetableRenderer {
     else if (this.vPos === 'center') timetableY = (this.canvas.height - timetableHeight) / 2;
     else timetableY = this.canvas.height - timetableHeight;
     
+    const { timeStart, timeEnd } = this.getVisibleTimeRange();
+
     // 레이블 그리기 (클리핑 전)
-    this.drawLabels(timetableX, timetableY, timetableWidth, timetableHeight);
+    this.drawLabels(timetableX, timetableY, timetableWidth, timetableHeight, timeStart, timeEnd);
     
     // 클리핑 영역 설정 (그리드와 블록용)
     this.ctx.save();
@@ -70,24 +72,58 @@ export class TimetableRenderer {
     this.ctx.clip();
     
     // 그리드와 블록 렌더링
-    this.drawGrid(timetableX, timetableY, timetableWidth, timetableHeight);
-    this.drawCourses(timetableX, timetableY, timetableWidth, timetableHeight);
+    this.drawGrid(timetableX, timetableY, timetableWidth, timetableHeight, timeStart, timeEnd);
+    this.drawCourses(timetableX, timetableY, timetableWidth, timetableHeight, timeStart, timeEnd);
     
     this.ctx.restore();
   }
 
   drawTimetable(x, y, width, height) {
+    const { timeStart, timeEnd } = this.getVisibleTimeRange();
+
     // 격자 그리기
-    this.drawGrid(x, y, width, height);
+    this.drawGrid(x, y, width, height, timeStart, timeEnd);
     
     // 요일/시간 레이블
-    this.drawLabels(x, y, width, height);
+    this.drawLabels(x, y, width, height, timeStart, timeEnd);
     
     // 강의 블록
-    this.drawCourses(x, y, width, height);
+    this.drawCourses(x, y, width, height, timeStart, timeEnd);
   }
 
-  drawGrid(x, y, width, height) {
+  getVisibleTimeRange() {
+    const validCourses = this.courses.filter((course) => {
+      const startH = parseInt(course.startH, 10);
+      const startM = parseInt(course.startM, 10);
+      const endH = parseInt(course.endH, 10);
+      const endM = parseInt(course.endM, 10);
+      return [startH, startM, endH, endM].every((v) => Number.isFinite(v));
+    });
+
+    if (validCourses.length === 0) {
+      return { timeStart: 420, timeEnd: 1020 };
+    }
+
+    const earliestStartMin = Math.min(
+      ...validCourses.map((course) => parseInt(course.startH, 10) * 60 + parseInt(course.startM, 10))
+    );
+    const latestEndMin = Math.max(
+      ...validCourses.map((course) => parseInt(course.endH, 10) * 60 + parseInt(course.endM, 10))
+    );
+
+    let startHour = Math.floor(earliestStartMin / 60);
+    let endHour = Math.ceil(latestEndMin / 60);
+
+    startHour = Math.max(0, Math.min(23, startHour));
+    endHour = Math.max(startHour + 1, Math.min(24, endHour));
+
+    return {
+      timeStart: startHour * 60,
+      timeEnd: endHour * 60
+    };
+  }
+
+  drawGrid(x, y, width, height, timeStart, timeEnd) {
     // 그리드 색상: 첫 번째 색상(대표색) 기반, 매우 투명하게
     const dominantColor = this.colors[0];
     const gridColor = `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, 0.08)`;
@@ -105,9 +141,11 @@ export class TimetableRenderer {
       this.ctx.stroke();
     }
     
+    const hourCount = Math.max(1, Math.round((timeEnd - timeStart) / 60));
+
     // 가로 선 (시간) - 정시
-    for (let i = 0; i <= 10; i++) {
-      const lineY = y + (i / 10) * height;
+    for (let i = 0; i <= hourCount; i++) {
+      const lineY = y + (i / hourCount) * height;
       this.ctx.beginPath();
       this.ctx.moveTo(x, lineY);
       this.ctx.lineTo(x + width, lineY);
@@ -117,8 +155,9 @@ export class TimetableRenderer {
     // 30분 선 (더 연하게)
     this.ctx.strokeStyle = gridColorHalf;
     this.ctx.lineWidth = 1;
-    for (let i = 0; i < 10; i++) {
-      const lineY = y + ((i * 60 + 30) / 600) * height;
+    for (let i = 0; i < hourCount; i++) {
+      const minuteFromStart = i * 60 + 30;
+      const lineY = y + (minuteFromStart / (timeEnd - timeStart)) * height;
       this.ctx.beginPath();
       this.ctx.moveTo(x, lineY);
       this.ctx.lineTo(x + width, lineY);
@@ -126,7 +165,7 @@ export class TimetableRenderer {
     }
   }
 
-  drawLabels(x, y, width, height) {
+  drawLabels(x, y, width, height, timeStart, timeEnd) {
     // 요일 레이블
     this.ctx.fillStyle = `rgb(${this.textColor[0]}, ${this.textColor[1]}, ${this.textColor[2]})`;
     this.ctx.font = `bold ${this.labelFontSize}px Cafe24 Surround, sans-serif`;
@@ -144,20 +183,17 @@ export class TimetableRenderer {
     this.ctx.textAlign = 'right';
     this.ctx.textBaseline = 'middle';
 
-    const timeStart = 420; // 7:00
-    const timeEnd = 1020; // 17:00
-    const timeRange = timeEnd - timeStart;
+    const hourCount = Math.max(1, Math.round((timeEnd - timeStart) / 60));
+    const startHour = Math.floor(timeStart / 60);
 
-    for (let h = 0; h <= 10; h++) {
-      const hour = 7 + h;
-      const labelY = y + (h / 10) * height;
+    for (let h = 0; h <= hourCount; h++) {
+      const hour = startHour + h;
+      const labelY = y + (h / hourCount) * height;
       this.ctx.fillText(`${hour}:00`, x - 15, labelY);
     }
   }
 
-  drawCourses(x, y, width, height) {
-    const timeStart = 420; // 7:00
-    const timeEnd = 1020; // 17:00
+  drawCourses(x, y, width, height, timeStart, timeEnd) {
     const timeRange = timeEnd - timeStart;
     const padding = 8;
     const radius = 8;

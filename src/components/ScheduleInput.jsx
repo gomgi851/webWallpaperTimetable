@@ -5,7 +5,7 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
   return (
     <div className="card">
       <h3>2. 수업 정보 입력</h3>
-      <div className="row header-row">
+      <div className="header-row">
         <div>요일</div>
         <div>강의명</div>
         <div>시간</div>
@@ -33,6 +33,8 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
               value={course.name}
               onChange={(e) => onUpdateClass(course.id, 'name', e.target.value)}
             />
+
+            <div className="mobile-field-label time-label">시간</div>
             
             <div className="time-inputs">
               <select
@@ -41,7 +43,7 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
                 onChange={(e) => onUpdateClass(course.id, 'startH', e.target.value)}
               >
                 {HOURS.map(h => (
-                  <option key={h} value={h}>{h}:00</option>
+                  <option key={h} value={h}>{h}</option>
                 ))}
               </select>
               <select
@@ -60,7 +62,7 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
                 onChange={(e) => onUpdateClass(course.id, 'endH', e.target.value)}
               >
                 {HOURS.map(h => (
-                  <option key={h} value={h}>{h}:00</option>
+                  <option key={h} value={h}>{h}</option>
                 ))}
               </select>
               <select
@@ -73,6 +75,8 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
                 ))}
               </select>
             </div>
+
+            <div className="mobile-field-label room-label">강의실</div>
             
             <input
               className="room-input"
@@ -87,7 +91,7 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
               onClick={() => onDeleteClass(course.id)}
               title="삭제"
             >
-              삭제
+              X
             </button>
           </div>
         ))}
