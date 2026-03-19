@@ -19,6 +19,9 @@ export const TIMETABLE_COLORS = [
   { r: 92, g: 107, b: 192, a: 200 }
 ];
 
+let paletteWorker = null;
+let paletteRequestId = 0;
+
 // RGB 색상 문자열 생성
 export function rgbaString(r, g, b, a = 255) {
   return `rgba(${r}, ${g}, ${b}, ${a / 255})`;
@@ -192,6 +195,63 @@ function kMeansLikePython(samples, nClusters, randomState = 42, nInit = 10) {
   }
 
   return best;
+}
+
+function getPaletteWorker() {
+  if (typeof Worker === 'undefined') return null;
+  if (!paletteWorker) {
+    paletteWorker = new Worker(new URL('./palette-worker.js', import.meta.url), { type: 'module' });
+  }
+  return paletteWorker;
+}
+
+export async function extractPaletteFromImageAsync(img, nColors = 8, sampleRate = 10) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = img.width;
+  canvas.height = img.height;
+  ctx.drawImage(img, 0, 0, img.width, img.height);
+
+  const imageData = ctx.getImageData(0, 0, img.width, img.height);
+  const worker = getPaletteWorker();
+  if (!worker) {
+    return extractPaletteFromImage(img, nColors, sampleRate);
+  }
+
+  const id = ++paletteRequestId;
+  return new Promise((resolve) => {
+    const onMessage = (event) => {
+      const payload = event.data || {};
+      if (payload.id !== id) return;
+      worker.removeEventListener('message', onMessage);
+      worker.removeEventListener('error', onError);
+
+      if (payload.error) {
+        resolve(extractPaletteFromImage(img, nColors, sampleRate));
+        return;
+      }
+      resolve(payload.result);
+    };
+
+    const onError = () => {
+      worker.removeEventListener('message', onMessage);
+      worker.removeEventListener('error', onError);
+      resolve(extractPaletteFromImage(img, nColors, sampleRate));
+    };
+
+    worker.addEventListener('message', onMessage);
+    worker.addEventListener('error', onError);
+    worker.postMessage(
+      {
+        id,
+        nColors,
+        sampleRate,
+        rgbaBuffer: imageData.data.buffer
+      },
+      [imageData.data.buffer]
+    );
+  });
 }
 
 // 이미지에서 팔레트 추출 (파이썬 코드와 동일한 로직)

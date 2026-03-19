@@ -3,7 +3,7 @@ import './App.css';
 import Settings from './components/Settings';
 import ScheduleInput from './components/ScheduleInput';
 import Preview from './components/Preview';
-import { RESOLUTIONS, extractPaletteFromImage } from './lib/utils';
+import { RESOLUTIONS, extractPaletteFromImageAsync } from './lib/utils';
 
 const STORAGE_KEY = 'timetable_settings';
 
@@ -60,6 +60,7 @@ export default function App() {
   const [customHeight, setCustomHeight] = useState(1080);
   const [bgImage, setBgImage] = useState(null);
   const [bgFileName, setBgFileName] = useState('');
+  const [isBgProcessing, setIsBgProcessing] = useState(false);
   const [courseNameFontSize, setCourseNameFontSize] = useState(20);
   const [courseRoomFontSize, setCourseRoomFontSize] = useState(15);
   const [labelFontSize, setLabelFontSize] = useState(14);
@@ -71,6 +72,7 @@ export default function App() {
     { r: 13, g: 71, b: 161, a: 200 },
     { r: 92, g: 107, b: 192, a: 200 }
   ]);
+  const bgProcessTokenRef = useRef(0);
 
   // localStorage에서 로드
   useEffect(() => {
@@ -146,19 +148,39 @@ export default function App() {
   const handleBgImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    const currentToken = ++bgProcessTokenRef.current;
 
     setBgFileName(file.name);
+    setIsBgProcessing(true);
 
     const reader = new FileReader();
+    reader.onerror = () => {
+      if (bgProcessTokenRef.current !== currentToken) return;
+      setIsBgProcessing(false);
+      alert('이미지 파일을 읽는 중 오류가 발생했습니다.');
+    };
     reader.onload = (event) => {
       const img = new Image();
-      img.onload = () => {
-        setBgImage(img);
-        
-        // 팔레트 추출
-        const palette = extractPaletteFromImage(img, 8, 10);
-        setPaletteColors(palette.blockColors);
-        setTextColor(palette.textColor);
+      img.onerror = () => {
+        if (bgProcessTokenRef.current !== currentToken) return;
+        setIsBgProcessing(false);
+        alert('이미지를 불러오는 중 오류가 발생했습니다.');
+      };
+      img.onload = async () => {
+        try {
+          if (bgProcessTokenRef.current !== currentToken) return;
+          setBgImage(img);
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          // 팔레트 추출
+          const palette = await extractPaletteFromImageAsync(img, 8, 10);
+          if (bgProcessTokenRef.current !== currentToken) return;
+          setPaletteColors(palette.blockColors);
+          setTextColor(palette.textColor);
+        } finally {
+          if (bgProcessTokenRef.current !== currentToken) return;
+          setIsBgProcessing(false);
+        }
       };
       img.src = event.target.result;
     };
@@ -212,6 +234,7 @@ export default function App() {
 
       <Preview
         bgImage={bgImage}
+        isBgProcessing={isBgProcessing}
         classes={classes}
         textColor={textColor}
         hPos={hPos}

@@ -306,27 +306,64 @@ h3 {
   min-height: 48px;
   padding: 12px 22px;
   font-size: 1.2rem;
-  background: #3182ce;
-  color: white;
+  color: #f7fbff;
   border: none;
   border-radius: 999px;
-  box-shadow: 0 6px 16px rgba(49, 130, 206, 0.25);
+  background: linear-gradient(145deg, #4d9de0, #2f7fc7);
+  box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.28),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.08),
+    8px 8px 18px rgba(27, 65, 107, 0.28),
+    -6px -6px 14px rgba(255, 255, 255, 0.62);
   cursor: pointer;
   font-weight: 600;
   line-height: 1.1;
-  transition: all 0.3s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .generate-btn:hover:not(:disabled) {
-  background: #2c5aa0;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(49, 130, 206, 0.35);
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.32),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.1),
+    10px 10px 20px rgba(27, 65, 107, 0.3),
+    -8px -8px 16px rgba(255, 255, 255, 0.65);
+}
+
+.generate-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    inset 3px 3px 5px rgba(0, 0, 0, 0.18),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.22),
+    4px 4px 8px rgba(27, 65, 107, 0.2);
 }
 
 .generate-btn:disabled {
-  background: #a0aec0;
+  background: linear-gradient(145deg, #a8adb5, #8e949d);
   cursor: not-allowed;
   transform: none;
+  box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.22),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.12),
+    6px 6px 14px rgba(107, 116, 128, 0.28),
+    -5px -5px 12px rgba(255, 255, 255, 0.58);
+  opacity: 1;
+  filter: none;
+}
+
+.generate-btn.is-busy {
+  background: linear-gradient(145deg, #a8adb5, #8e949d) !important;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.22),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.12),
+    6px 6px 14px rgba(107, 116, 128, 0.28),
+    -5px -5px 12px rgba(255, 255, 255, 0.58) !important;
+  opacity: 1;
+  transition: none;
+  filter: none;
 }
 
 #preview-canvas {

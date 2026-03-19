@@ -4,6 +4,7 @@ import { RESOLUTIONS } from '../lib/utils';
 
 export default function Preview({
   bgImage,
+  isBgProcessing,
   classes,
   textColor,
   hPos,
@@ -21,6 +22,7 @@ export default function Preview({
   const [showResult, setShowResult] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState(null);
+  const isBusy = isGenerating || isBgProcessing || !bgImage;
 
   useEffect(() => {
     return () => {
@@ -110,17 +112,17 @@ export default function Preview({
     <>
       <div className="generate-wrapper">
         <button
-          className="generate-btn"
+          className={`generate-btn ${isBusy ? 'is-busy' : ''}`}
           onClick={handleGenerate}
-          disabled={isGenerating}
+          disabled={isBusy}
+          aria-busy={isGenerating || isBgProcessing}
         >
-          {isGenerating ? '생성 중...' : '배경화면 생성하기'}
+          {isBgProcessing ? 'loading...' : (isGenerating ? '생성 중...' : '배경화면 생성하기')}
         </button>
       </div>
 
       {showResult && (
         <div id="result-container" style={{ textAlign: 'center', marginTop: '30px' }}>
-          <h3>배경화면이 완성되었어요</h3>
           <img
             src={downloadUrl}
             alt="Generated timetable wallpaper"
