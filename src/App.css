@@ -299,6 +299,16 @@ h3 {
     -4px -4px 10px rgba(255,255,255,0.9);
 }
 
+.add-btn:active {
+  transform: translateY(0);
+
+  background: linear-gradient(145deg, #dcdfe6, #f2f4f8);
+
+  box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,0.12),
+    inset -2px -2px 5px rgba(255,255,255,0.6);
+}
+
 .generate-wrapper {
   display: flex;
   justify-content: center;
