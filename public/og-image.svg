@@ -1,0 +1,41 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="80" y1="40" x2="1130" y2="590" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A5B4FC"/>
+      <stop offset="0.52" stop-color="#C4B5FD"/>
+      <stop offset="1" stop-color="#F0F4FF"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="260" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2F3548"/>
+      <stop offset="1" stop-color="#4A5568"/>
+    </linearGradient>
+    <filter id="shadow" x="220" y="130" width="760" height="420" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="48" y="48" width="1104" height="534" rx="28" fill="white" fill-opacity="0.35"/>
+
+  <text x="90" y="144" fill="#111827" font-size="58" font-family="Pretendard, Arial, sans-serif" font-weight="800">
+    나만의 시간표 배경 생성기
+  </text>
+  <text x="92" y="196" fill="#374151" font-size="28" font-family="Pretendard, Arial, sans-serif" font-weight="500">
+    강의 시간표를 배경화면으로 빠르게 만들어 저장하세요.
+  </text>
+
+  <g filter="url(#shadow)">
+    <rect x="270" y="220" width="220" height="290" rx="18" fill="url(#card)"/>
+    <rect x="515" y="180" width="220" height="330" rx="18" fill="url(#card)"/>
+    <rect x="760" y="260" width="220" height="250" rx="18" fill="url(#card)"/>
+  </g>
+
+  <text x="320" y="330" fill="white" font-size="42" font-family="Pretendard, Arial, sans-serif" font-weight="700">자료구조</text>
+  <text x="320" y="372" fill="white" fill-opacity="0.82" font-size="30" font-family="Pretendard, Arial, sans-serif" font-weight="600">N101</text>
+
+  <text x="565" y="300" fill="white" font-size="42" font-family="Pretendard, Arial, sans-serif" font-weight="700">운영체제</text>
+  <text x="565" y="342" fill="white" fill-opacity="0.82" font-size="30" font-family="Pretendard, Arial, sans-serif" font-weight="600">N102</text>
+
+  <text x="805" y="345" fill="white" font-size="42" font-family="Pretendard, Arial, sans-serif" font-weight="700">네트워크</text>
+  <text x="805" y="387" fill="white" fill-opacity="0.82" font-size="30" font-family="Pretendard, Arial, sans-serif" font-weight="600">N110</text>
+</svg>
