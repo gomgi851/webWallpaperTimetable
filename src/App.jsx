@@ -167,6 +167,14 @@ export default function App() {
   const handleBgImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // 파일 크기 확인 (10MB 제한)
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    if (file.size > MAX_FILE_SIZE) {
+      showToast('파일 크기가 10MB를 초과합니다. 더 작은 이미지를 선택해주세요.', 'error');
+      return;
+    }
+
     const currentToken = ++bgProcessTokenRef.current;
 
     setBgFileName(file.name);
