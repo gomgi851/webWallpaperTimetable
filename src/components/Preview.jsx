@@ -129,37 +129,11 @@ export default function Preview({
             id="preview-canvas"
             style={{ maxWidth: '100%', borderRadius: '12px', boxShadow: '0 8px 20px rgba(0,0,0,0.1)' }}
           />
-          <div style={{ marginTop: '15px' }}>
-            <a
-              href={downloadUrl}
-              download="timetable.png"
-              style={{
-                display: 'inline-block',
-                padding: '12px 24px',
-                background: '#2d3748',
-                color: '#fff',
-                textDecoration: 'none',
-                borderRadius: '8px',
-                fontWeight: 'bold'
-              }}
-            >
+          <div style={{ marginTop: '15px', display: 'flex', gap: '10px', justifyContent: 'center' }}>
+            <a href={downloadUrl} download="timetable.png" className="result-action-btn result-save-btn">
               이미지 저장하기
             </a>
-            <a
-              href={downloadUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-block',
-                marginLeft: '8px',
-                padding: '12px 24px',
-                background: '#4a5568',
-                color: '#fff',
-                textDecoration: 'none',
-                borderRadius: '8px',
-                fontWeight: 'bold'
-              }}
-            >
+            <a href={downloadUrl} target="_blank" rel="noopener noreferrer" className="result-action-btn result-open-btn">
               새 탭에서 열기
             </a>
           </div>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>뉴모피즘 버튼 테스트</title>
+  <link rel="stylesheet" href="./NeumorphismButton/NeumorphismButton.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+      font-family: 'Do Hyeon', sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #333;
+      text-align: center;
+    }
+
+    .button-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .neumorphism-button {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(145deg, #f0f0f0, #e8e8e8);
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 
+        8px 8px 16px #bebebe,
+        -8px -8px 16px #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0;
+    }
+
+    .neumorphism-button:hover {
+      box-shadow: 
+        10px 10px 20px #bebebe,
+        -10px -10px 20px #ffffff;
+      transform: translateY(-2px);
+    }
+
+    .neumorphism-button:active {
+      box-shadow: 
+        inset 5px 5px 10px #bebebe,
+        inset -5px -5px 10px #ffffff;
+      transform: translateY(0);
+    }
+
+    .description {
+      font-size: 1.1rem;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>뉴모피즘 버튼 테스트</h1>
+    
+    <div class="button-wrapper">
+      <button class="neumorphism-button" onclick="handleClick()">
+        클릭하기
+      </button>
+    </div>
+
+    <div class="description">
+      <p>중간 크기의 뉴모피즘 버튼</p>
+      <p style="font-size: 0.95rem; color: #999; margin-top: 10px;">부드러운 그림자 효과와 3D 입체감</p>
+    </div>
+  </div>
+
+  <script>
+    function handleClick() {
+      alert('뉴모피즘 버튼을 클릭했습니다! 🎨');
+    }
+  </script>
+</body>
+</html>

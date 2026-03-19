@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Pretendard:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Pretendard:wght@400;500;700&display=swap');
 
 @font-face {
   font-family: 'Cafe24 Surround';
@@ -32,19 +32,19 @@ body {
 }
 
 h1 {
-  font-family: 'Black Han Sans', sans-serif !important;
-  font-weight: 400;
+  font-family: 'Do Hyeon', sans-serif !important;
+  font-weight: 600;
   text-align: left;
   margin-top: 5px;
   margin-bottom: 15px;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   color: #000000 !important;
   flex: 1;
 }
 
 h3 {
-  font-family: 'Black Han Sans', sans-serif !important;
-  font-weight: 400;
+  font-family: 'Do Hyeon', sans-serif !important;
+  font-weight: 600;
   font-size: 1.28rem;
   margin-top: 0;
   margin-bottom: 18px;
@@ -299,9 +299,19 @@ h3 {
   justify-content: center;
   margin: 20px 0;
 }
+/* =========================
+   공통 transition
+========================= */
+button {
+  transition: all 0.2s ease;
+}
 
+
+/* =========================
+   생성 버튼 (Primary)
+========================= */
 .generate-btn {
-  font-family: 'Black Han Sans', sans-serif !important;
+  font-family: 'Do Hyeon', sans-serif !important;
   width: 236px;
   min-height: 48px;
   padding: 12px 22px;
@@ -309,65 +319,148 @@ h3 {
   color: #f7fbff;
   border: none;
   border-radius: 999px;
-  background: linear-gradient(145deg, #4d9de0, #2f7fc7);
-  box-shadow:
-    inset 1px 1px 1px rgba(255, 255, 255, 0.28),
-    inset -1px -1px 1px rgba(0, 0, 0, 0.08),
-    8px 8px 18px rgba(27, 65, 107, 0.28),
-    -6px -6px 14px rgba(255, 255, 255, 0.62);
-  cursor: pointer;
   font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: 0.2px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
+  cursor: pointer;
 
-.generate-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  background: linear-gradient(145deg, #58a7e8, #3b8ad3);
+  background: linear-gradient(145deg, #6ea8ff, #2f6fd6);
+
   box-shadow:
-    inset 1px 1px 1px rgba(255, 255, 255, 0.32),
-    inset -1px -1px 1px rgba(0, 0, 0, 0.1),
-    10px 10px 20px rgba(27, 65, 107, 0.3),
-    -8px -8px 16px rgba(255, 255, 255, 0.65);
+    inset 1px 1px 2px rgba(255, 255, 255, 0.35),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.1),
+    8px 8px 18px rgba(47, 111, 214, 0.28),
+    -6px -6px 14px rgba(255, 255, 255, 0.65);
 }
 
+/* hover */
+.generate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  background: linear-gradient(145deg, #7bb3ff, #3b7ae0);
+
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, 0.4),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.12),
+    10px 10px 22px rgba(47, 111, 214, 0.32),
+    -8px -8px 16px rgba(255, 255, 255, 0.7);
+}
+
+/* active (눌림) */
 .generate-btn:active:not(:disabled) {
   transform: translateY(0);
-  background: linear-gradient(145deg, #3a8ad3, #4b9ee0);
+
+  background: linear-gradient(145deg, #2f6fd6, #6ea8ff);
+
   box-shadow:
-    inset 2px 2px 4px rgba(0, 0, 0, 0.18),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.22),
-    4px 4px 8px rgba(27, 65, 107, 0.2);
+    inset 3px 3px 6px rgba(0, 0, 0, 0.2),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.25);
 }
 
-.generate-btn:disabled {
-  color: #7b8088;
-  background: linear-gradient(145deg, #ececec, #d6d6d6);
-  cursor: not-allowed;
-  transform: none;
-  box-shadow:
-    inset 1px 1px 1px rgba(255, 255, 255, 0.7),
-    inset -1px -1px 1px rgba(0, 0, 0, 0.05),
-    6px 6px 12px rgba(0, 0, 0, 0.11),
-    -5px -5px 10px rgba(255, 255, 255, 0.9);
-  opacity: 1;
-}
-
+/* disabled + busy 공통 */
+.generate-btn:disabled,
 .generate-btn.is-busy {
-  color: #7b8088;
-  background: linear-gradient(145deg, #ececec, #d6d6d6) !important;
+  color: #8a9098;
   cursor: not-allowed;
   transform: none;
+
+  background: linear-gradient(145deg, #ececec, #d6d6d6);
+
   box-shadow:
-    inset 1px 1px 1px rgba(255, 255, 255, 0.7),
-    inset -1px -1px 1px rgba(0, 0, 0, 0.05),
-    6px 6px 12px rgba(0, 0, 0, 0.11),
-    -5px -5px 10px rgba(255, 255, 255, 0.9) !important;
-  opacity: 1;
-  transition: none;
+    inset 1px 1px 2px rgba(255, 255, 255, 0.7),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.05),
+    6px 6px 12px rgba(0, 0, 0, 0.12),
+    -5px -5px 10px rgba(255, 255, 255, 0.9);
 }
 
+
+/* =========================
+   결과 버튼 공통
+========================= */
+.result-action-btn {
+  font-family: 'Do Hyeon', sans-serif !important;
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/* =========================
+   이미지 저장 (Secondary)
+========================= */
+.result-save-btn {
+  color: #2f6fd6;
+
+  background: linear-gradient(145deg, #e6f0ff, #b8d4ff);
+
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, 0.7),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.05),
+    8px 8px 18px rgba(47, 111, 214, 0.18),
+    -6px -6px 14px rgba(255, 255, 255, 0.9);
+}
+
+.result-save-btn:hover {
+  transform: translateY(-2px);
+
+  background: linear-gradient(145deg, #f0f6ff, #c9e0ff);
+
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, 0.8),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.06),
+    10px 10px 20px rgba(47, 111, 214, 0.22),
+    -8px -8px 16px rgba(255, 255, 255, 0.95);
+}
+
+.result-save-btn:active {
+  transform: translateY(0);
+
+  background: linear-gradient(145deg, #b8d4ff, #e6f0ff);
+
+  box-shadow:
+    inset 3px 3px 6px rgba(0, 0, 0, 0.15),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.25);
+}
+
+
+/* =========================
+   새 탭 열기 (Tertiary)
+========================= */
+.result-open-btn {
+  color: #5b6b8c;
+
+  background: linear-gradient(145deg, #f2f4f8, #d6dbe6);
+
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, 0.8),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.05),
+    8px 8px 18px rgba(0, 0, 0, 0.12),
+    -6px -6px 14px rgba(255, 255, 255, 0.95);
+}
+
+.result-open-btn:hover {
+  transform: translateY(-2px);
+
+  background: linear-gradient(145deg, #f7f9fc, #e2e6ee);
+
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, 0.85),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.06),
+    10px 10px 20px rgba(0, 0, 0, 0.15),
+    -8px -8px 16px rgba(255, 255, 255, 1);
+}
+
+.result-open-btn:active {
+  transform: translateY(0);
+
+  background: linear-gradient(145deg, #d6dbe6, #f2f4f8);
+
+  box-shadow:
+    inset 3px 3px 6px rgba(0, 0, 0, 0.15),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.3);
+}
 #preview-canvas {
   max-width: 100%;
   max-height: 600px;
