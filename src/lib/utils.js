@@ -55,66 +55,143 @@ export function calculatePosition(day, start, end, gridWidth, gridHeight, timeSt
   return { x, y, width, height };
 }
 
-// 간단한 K-Means 클러스터링
-function kMeans(pixels, nClusters, maxIterations = 10) {
-  // 초기 센터: 랜덤 선택
+function createSeededRng(seed = 42) {
+  let s = seed >>> 0;
+  return () => {
+    s += 0x6D2B79F5;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function sqDist(a, b) {
+  const dr = a[0] - b[0];
+  const dg = a[1] - b[1];
+  const db = a[2] - b[2];
+  return dr * dr + dg * dg + db * db;
+}
+
+function initKMeansPlusPlus(samples, k, rng) {
   const centers = [];
-  for (let i = 0; i < nClusters; i++) {
-    const randomIdx = Math.floor(Math.random() * pixels.length);
-    centers.push([pixels[randomIdx].r, pixels[randomIdx].g, pixels[randomIdx].b]);
-  }
-  
-  let labels = new Array(pixels.length);
-  
-  for (let iter = 0; iter < maxIterations; iter++) {
-    // 각 픽셀을 가장 가까운 센터에 할당
-    for (let i = 0; i < pixels.length; i++) {
-      let minDist = Infinity;
-      let closestCenter = 0;
-      
+  const firstIdx = Math.floor(rng() * samples.length);
+  centers.push(samples[firstIdx].slice());
+
+  while (centers.length < k) {
+    const d2 = new Array(samples.length);
+    let total = 0;
+
+    for (let i = 0; i < samples.length; i++) {
+      let minD = Infinity;
       for (let c = 0; c < centers.length; c++) {
-        const dr = pixels[i].r - centers[c][0];
-        const dg = pixels[i].g - centers[c][1];
-        const db = pixels[i].b - centers[c][2];
-        const dist = dr * dr + dg * dg + db * db;
-        
+        const dist = sqDist(samples[i], centers[c]);
+        if (dist < minD) minD = dist;
+      }
+      d2[i] = minD;
+      total += minD;
+    }
+
+    if (total === 0) {
+      const idx = Math.floor(rng() * samples.length);
+      centers.push(samples[idx].slice());
+      continue;
+    }
+
+    let target = rng() * total;
+    let chosen = 0;
+    for (let i = 0; i < d2.length; i++) {
+      target -= d2[i];
+      if (target <= 0) {
+        chosen = i;
+        break;
+      }
+    }
+    centers.push(samples[chosen].slice());
+  }
+
+  return centers;
+}
+
+function runLloyd(samples, initCenters, maxIterations = 300, tolerance = 1e-4) {
+  const k = initCenters.length;
+  const centers = initCenters.map((c) => c.slice());
+  const labels = new Array(samples.length).fill(0);
+
+  let prevInertia = Infinity;
+
+  for (let iter = 0; iter < maxIterations; iter++) {
+    let inertia = 0;
+
+    for (let i = 0; i < samples.length; i++) {
+      let minDist = Infinity;
+      let minIdx = 0;
+
+      for (let c = 0; c < k; c++) {
+        const dist = sqDist(samples[i], centers[c]);
         if (dist < minDist) {
           minDist = dist;
-          closestCenter = c;
+          minIdx = c;
         }
       }
-      labels[i] = closestCenter;
+
+      labels[i] = minIdx;
+      inertia += minDist;
     }
-    
-    // 센터 업데이트
-    const newCenters = Array.from({ length: nClusters }, () => [0, 0, 0]);
-    const counts = new Array(nClusters).fill(0);
-    
-    for (let i = 0; i < pixels.length; i++) {
-      const label = labels[i];
-      newCenters[label][0] += pixels[i].r;
-      newCenters[label][1] += pixels[i].g;
-      newCenters[label][2] += pixels[i].b;
-      counts[label]++;
+
+    const sums = Array.from({ length: k }, () => [0, 0, 0]);
+    const counts = new Array(k).fill(0);
+
+    for (let i = 0; i < samples.length; i++) {
+      const c = labels[i];
+      sums[c][0] += samples[i][0];
+      sums[c][1] += samples[i][1];
+      sums[c][2] += samples[i][2];
+      counts[c] += 1;
     }
-    
-    for (let c = 0; c < nClusters; c++) {
-      if (counts[c] > 0) {
-        centers[c][0] = Math.round(newCenters[c][0] / counts[c]);
-        centers[c][1] = Math.round(newCenters[c][1] / counts[c]);
-        centers[c][2] = Math.round(newCenters[c][2] / counts[c]);
-      }
+
+    for (let c = 0; c < k; c++) {
+      if (counts[c] === 0) continue;
+      centers[c][0] = sums[c][0] / counts[c];
+      centers[c][1] = sums[c][1] / counts[c];
+      centers[c][2] = sums[c][2] / counts[c];
     }
+
+    if (Math.abs(prevInertia - inertia) <= tolerance * prevInertia) {
+      break;
+    }
+    prevInertia = inertia;
   }
-  
-  // 각 센터의 빈도수 계산
-  const counts = new Array(nClusters).fill(0);
+
+  const finalCounts = new Array(k).fill(0);
   for (let i = 0; i < labels.length; i++) {
-    counts[labels[i]]++;
+    finalCounts[labels[i]] += 1;
   }
-  
-  // 센터와 빈도수를 함께 반환
-  return { centers, counts };
+
+  let finalInertia = 0;
+  for (let i = 0; i < samples.length; i++) {
+    finalInertia += sqDist(samples[i], centers[labels[i]]);
+  }
+
+  return { centers, labels, counts: finalCounts, inertia: finalInertia };
+}
+
+// Python sklearn KMeans(n_init=10, random_state=42)와 유사하게 동작하도록 구성
+function kMeansLikePython(samples, nClusters, randomState = 42, nInit = 10) {
+  const k = Math.min(nClusters, samples.length);
+  let best = null;
+
+  for (let initIdx = 0; initIdx < nInit; initIdx++) {
+    const rng = createSeededRng(randomState + initIdx);
+    const initCenters = initKMeansPlusPlus(samples, k, rng);
+    const result = runLloyd(samples, initCenters, 300, 1e-4);
+
+    if (!best || result.inertia < best.inertia) {
+      best = result;
+    }
+  }
+
+  return best;
 }
 
 // 이미지에서 팔레트 추출 (파이썬 코드와 동일한 로직)
@@ -123,45 +200,42 @@ export function extractPaletteFromImage(img, nColors = 8, sampleRate = 10) {
   
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
+
+  // Python 코드와 동일: 리사이즈 없이 원본 크기 사용
+  canvas.width = img.width;
+  canvas.height = img.height;
+  ctx.drawImage(img, 0, 0, img.width, img.height);
   
-  // 큰 이미지는 리사이징해서 처리 (성능 개선)
-  let imgWidth = img.width;
-  let imgHeight = img.height;
-  const maxDimension = 512;
+  console.log(`[팔레트] 이미지 크기: ${img.width}x${img.height}`);
   
-  if (imgWidth > maxDimension || imgHeight > maxDimension) {
-    const scale = Math.min(maxDimension / imgWidth, maxDimension / imgHeight);
-    imgWidth = Math.round(imgWidth * scale);
-    imgHeight = Math.round(imgHeight * scale);
-  }
-  
-  canvas.width = imgWidth;
-  canvas.height = imgHeight;
-  ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
-  
-  console.log(`[팔레트] 이미지 크기: ${imgWidth}x${imgHeight}`);
-  
-  const imageData = ctx.getImageData(0, 0, imgWidth, imgHeight);
+  const imageData = ctx.getImageData(0, 0, img.width, img.height);
   const data = imageData.data;
   
   console.time('픽셀 수집');
   
-  // 1. 픽셀 수집: 밝기 30~225 범위만, 샘플링 적용
-  const pixels = [];
-  let totalBrightness = 0;
-  
-  // 초기 수집시부터 적극적 샘플링: 처음부터 30개마다만 우선 검사
-  for (let i = 0; i < data.length; i += 4 * sampleRate) {
+  // Python 코드와 동일:
+  // 1) 전체 픽셀 brightness=(r+g+b)/3 계산 후 30~225 필터
+  // 2) 필터된 배열에 sampleRate 간격 샘플링 적용
+  const midPixels = [];
+  let allChannelsSum = 0;
+  const pixelCount = data.length / 4;
+
+  for (let i = 0; i < data.length; i += 4) {
     const r = data[i];
     const g = data[i + 1];
     const b = data[i + 2];
-    
-    const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
-    
+
+    allChannelsSum += r + g + b;
+    const brightness = (r + g + b) / 3;
+
     if (brightness > 30 && brightness < 225) {
-      pixels.push({ r, g, b });
-      totalBrightness += brightness;
+      midPixels.push([r, g, b]);
     }
+  }
+
+  const pixels = [];
+  for (let i = 0; i < midPixels.length; i += sampleRate) {
+    pixels.push(midPixels[i]);
   }
   
   console.timeEnd('픽셀 수집');
@@ -178,8 +252,8 @@ export function extractPaletteFromImage(img, nColors = 8, sampleRate = 10) {
   
   console.time('K-Means 클러스터링');
   
-  // 2. K-Means 클러스터링 (반복 3회로 줄임)
-  const { centers, counts } = kMeans(pixels, nColors, 3);
+  // 2. Python sklearn KMeans와 유사한 설정
+  const { centers, counts } = kMeansLikePython(pixels, nColors, 42, 10);
   
   console.timeEnd('K-Means 클러스터링');
   
@@ -251,8 +325,8 @@ export function extractPaletteFromImage(img, nColors = 8, sampleRate = 10) {
   
   console.timeEnd('색상 변환');
   
-  // 5. 글자색 결정: 배경 평균 밝기 기준
-  const avgBrightness = pixels.length > 0 ? totalBrightness / pixels.length : 128;
+  // 5. Python 코드와 동일: 전체 픽셀 채널 평균 기준
+  const avgBrightness = pixelCount > 0 ? allChannelsSum / (pixelCount * 3) : 128;
   const textColor = avgBrightness > 128 ? 'black' : 'white';
   
   console.log(`[팔레트] 추출 완료:`, blockColors.map(c => `RGB(${c.r},${c.g},${c.b})`));

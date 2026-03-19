@@ -124,13 +124,17 @@ export class TimetableRenderer {
   }
 
   drawGrid(x, y, width, height, timeStart, timeEnd) {
+    const renderScale = Math.max(1, (this.canvas.width / 1920));
+
     // 그리드 색상: 첫 번째 색상(대표색) 기반, 매우 투명하게
     const dominantColor = this.colors[0];
-    const gridColor = `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, 0.08)`;
-    const gridColorHalf = `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, 0.04)`;
+    const majorAlpha = Math.min(0.22, 0.08 + 0.03 * (renderScale - 1));
+    const minorAlpha = Math.min(0.12, majorAlpha * 0.5);
+    const gridColor = `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, ${majorAlpha})`;
+    const gridColorHalf = `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, ${minorAlpha})`;
     
     this.ctx.strokeStyle = gridColor;
-    this.ctx.lineWidth = 2;
+    this.ctx.lineWidth = Math.max(2, Math.round(2.5 * renderScale));
     
     // 세로 선 (요일)
     for (let i = 0; i <= DAYS.length; i++) {
@@ -154,7 +158,7 @@ export class TimetableRenderer {
 
     // 30분 선 (더 연하게)
     this.ctx.strokeStyle = gridColorHalf;
-    this.ctx.lineWidth = 1;
+    this.ctx.lineWidth = Math.max(1, Math.round(1.3 * renderScale));
     for (let i = 0; i < hourCount; i++) {
       const minuteFromStart = i * 60 + 30;
       const lineY = y + (minuteFromStart / (timeEnd - timeStart)) * height;
@@ -195,8 +199,14 @@ export class TimetableRenderer {
 
   drawCourses(x, y, width, height, timeStart, timeEnd) {
     const timeRange = timeEnd - timeStart;
-    const padding = 8;
-    const radius = 8;
+    const renderScale = Math.max(1, (this.canvas.width / 1920) * 1.35);
+    const padding = Math.max(8, Math.round(8 * renderScale));
+    const radius = Math.max(8, Math.round(8 * renderScale));
+    const shadowOffset = Math.max(3, Math.round(3 * renderScale));
+    const shadowBlur = Math.max(6, Math.round(6 * renderScale));
+    const shadowAlpha = Math.min(0.75, 0.55 + 0.08 * (renderScale - 1));
+    const borderAlpha = Math.min(0.95, 0.86 + 0.05 * (renderScale - 1));
+    const borderWidth = Math.max(0.7, Math.round(0.7 * renderScale));
 
     // 강의명별 색상 매핑 (같은 강의 = 같은 색)
     const colorMap = {};
@@ -208,7 +218,12 @@ export class TimetableRenderer {
       }
     }
 
-    // 먼저 그림자 그리기
+    // 먼저 그림자 레이어 생성 (파이썬 렌더러처럼 분리 후 블러 합성)
+    const shadowCanvas = document.createElement('canvas');
+    shadowCanvas.width = this.canvas.width;
+    shadowCanvas.height = this.canvas.height;
+    const shadowCtx = shadowCanvas.getContext('2d');
+
     for (let course of this.courses) {
       const dayIndex = DAYS.indexOf(course.day);
       if (dayIndex === -1) continue;
@@ -223,20 +238,15 @@ export class TimetableRenderer {
       const blockWidth = width / DAYS.length - padding * 2;
       const blockHeight = ((Math.min(endTime, timeEnd) - Math.max(startTime, timeStart)) / timeRange) * height - padding;
 
-      // 그림자
-      this.ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-      this.ctx.shadowBlur = 8;
-      this.ctx.shadowOffsetX = 3;
-      this.ctx.shadowOffsetY = 3;
-
-      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-      this.roundRect(blockX, blockY, blockWidth, blockHeight, radius);
-      this.ctx.fill();
+      shadowCtx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+      this.roundRect(shadowCtx, blockX + shadowOffset, blockY + shadowOffset, blockWidth, blockHeight, radius);
+      shadowCtx.fill();
     }
 
-    // 그림자 초기화
-    this.ctx.shadowColor = 'transparent';
-    this.ctx.shadowBlur = 0;
+    this.ctx.save();
+    this.ctx.filter = `blur(${shadowBlur}px)`;
+    this.ctx.drawImage(shadowCanvas, 0, 0);
+    this.ctx.restore();
 
     // 블록 그리기
     for (let course of this.courses) {
@@ -256,13 +266,13 @@ export class TimetableRenderer {
       // 블록 배경 (라운드 코너)
       const color = colorMap[course.name];
       this.ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a / 255})`;
-      this.roundRect(blockX, blockY, blockWidth, blockHeight, radius);
+      this.roundRect(this.ctx, blockX, blockY, blockWidth, blockHeight, radius);
       this.ctx.fill();
 
-      // 블록 테두리
-      this.ctx.strokeStyle = `rgba(${Math.max(0, color.r - 30)}, ${Math.max(0, color.g - 30)}, ${Math.max(0, color.b - 30)}, 0.5)`;
-      this.ctx.lineWidth = 2;
-      this.roundRect(blockX, blockY, blockWidth, blockHeight, radius);
+      // 블록 테두리: 박스 색보다 밝게 (파이썬 렌더러와 유사)
+      this.ctx.strokeStyle = `rgba(${Math.min(255, color.r + 40)}, ${Math.min(255, color.g + 40)}, ${Math.min(255, color.b + 40)}, ${borderAlpha})`;
+      this.ctx.lineWidth = borderWidth;
+      this.roundRect(this.ctx, blockX, blockY, blockWidth, blockHeight, radius);
       this.ctx.stroke();
 
       // 텍스트
@@ -270,18 +280,18 @@ export class TimetableRenderer {
     }
   }
 
-  roundRect(x, y, width, height, radius) {
-    this.ctx.beginPath();
-    this.ctx.moveTo(x + radius, y);
-    this.ctx.lineTo(x + width - radius, y);
-    this.ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-    this.ctx.lineTo(x + width, y + height - radius);
-    this.ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-    this.ctx.lineTo(x + radius, y + height);
-    this.ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-    this.ctx.lineTo(x, y + radius);
-    this.ctx.quadraticCurveTo(x, y, x + radius, y);
-    this.ctx.closePath();
+  roundRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
   }
 
   drawCourseText(x, y, width, height, course) {
