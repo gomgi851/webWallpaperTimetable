@@ -319,6 +319,10 @@ h3 {
 .time-inputs select {
   flex: 1;
   min-width: 60px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #ffffff;
+  color: #1a1a1a;
 }
 
 .time-inputs span {
