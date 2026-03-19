@@ -39,11 +39,6 @@ export default function Preview({
       return;
     }
 
-    if (!paletteColors || paletteColors.length === 0) {
-      onShowToast('색상 추출 중입니다. 잠시만 기다려주세요.', 'info');
-      return;
-    }
-
     setIsGenerating(true);
 
     try {

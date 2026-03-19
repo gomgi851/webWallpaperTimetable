@@ -109,6 +109,14 @@ export default function App() {
     }
   }, []);
 
+  // 개발 도구용: window.showToast 노출
+  useEffect(() => {
+    window.showToast = showToast;
+    return () => {
+      delete window.showToast;
+    };
+  }, [showToast]);
+
   // 상태 변경 시 localStorage에 저장
   const saveState = () => {
     const dataToSave = {
@@ -163,19 +171,20 @@ export default function App() {
 
     setBgFileName(file.name);
     setIsBgProcessing(true);
+    showToast('색상 추출 중입니다. 잠시만 기다려주세요.', 'info');
 
     const reader = new FileReader();
     reader.onerror = () => {
       if (bgProcessTokenRef.current !== currentToken) return;
       setIsBgProcessing(false);
-      alert('이미지 파일을 읽는 중 오류가 발생했습니다.');
+      showToast('이미지 파일을 읽는 중 오류가 발생했습니다.', 'error');
     };
     reader.onload = (event) => {
       const img = new Image();
       img.onerror = () => {
         if (bgProcessTokenRef.current !== currentToken) return;
         setIsBgProcessing(false);
-        alert('이미지를 불러오는 중 오류가 발생했습니다.');
+        showToast('이미지를 불러오는 중 오류가 발생했습니다.', 'error');
       };
       img.onload = async () => {
         try {
@@ -190,6 +199,7 @@ export default function App() {
           if (bgProcessTokenRef.current !== currentToken) return;
           setPaletteColors(palette.blockColors);
           setTextColor(palette.textColor);
+          showToast('배경화면 생성 준비 완료.', 'success');
         } finally {
           if (bgProcessTokenRef.current !== currentToken) return;
           setIsBgProcessing(false);
