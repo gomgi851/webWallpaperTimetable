@@ -21,26 +21,6 @@ export default function App() {
     },
     {
       id: Math.random(),
-      day: '월',
-      name: '운영체제',
-      startH: '13',
-      startM: '00',
-      endH: '14',
-      endM: '30',
-      room: 'N102'
-    },
-    {
-      id: Math.random(),
-      day: '화',
-      name: '모바일프로그래밍',
-      startH: '10',
-      startM: '00',
-      endH: '11',
-      endM: '30',
-      room: 'N103'
-    },
-    {
-      id: Math.random(),
       day: '화',
       name: '모바일프로그래밍',
       startH: '13',
@@ -51,26 +31,6 @@ export default function App() {
     },
     {
       id: Math.random(),
-      day: '수',
-      name: '자료구조',
-      startH: '10',
-      startM: '00',
-      endH: '11',
-      endM: '30',
-      room: 'N105'
-    },
-    {
-      id: Math.random(),
-      day: '수',
-      name: '운영체제',
-      startH: '13',
-      startM: '00',
-      endH: '14',
-      endM: '30',
-      room: 'N106'
-    },
-    {
-      id: Math.random(),
       day: '목',
       name: '웹프로그래밍',
       startH: '10',
@@ -78,26 +38,6 @@ export default function App() {
       endH: '11',
       endM: '30',
       room: 'N107'
-    },
-    {
-      id: Math.random(),
-      day: '목',
-      name: '데이터베이스',
-      startH: '13',
-      startM: '00',
-      endH: '14',
-      endM: '30',
-      room: 'N108'
-    },
-    {
-      id: Math.random(),
-      day: '금',
-      name: '알고리즘',
-      startH: '10',
-      startM: '00',
-      endH: '11',
-      endM: '30',
-      room: 'N109'
     },
     {
       id: Math.random(),
