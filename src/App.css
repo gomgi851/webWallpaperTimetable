@@ -308,6 +308,10 @@ h3 {
 
 .row select.day-select {
   width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #ffffff;
+  color: #1a1a1a;
 }
 
 .time-inputs {
