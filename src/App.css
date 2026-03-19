@@ -38,14 +38,16 @@ h1 {
   margin-top: 5px;
   margin-bottom: 15px;
   font-size: 1.7rem;
-  color: #000000 !important;
+  color: #1a1a1a !important;
   flex: 1;
 }
 
 h3 {
+  color: #4b5563;
+  letter-spacing: 0.3px;
   font-family: 'Do Hyeon', sans-serif !important;
   font-weight: 600;
-  font-size: 1.28rem;
+  font-size: 1.35rem;
   margin-top: 0;
   margin-bottom: 18px;
   text-align: center;
@@ -88,20 +90,40 @@ h3 {
 
 .bg-file-label {
   display: inline-block;
-  padding: 9px 16px;
-  background-color: #4a5568;
-  color: #ffffff !important;
-  border-radius: 6px;
+  padding: 10px 16px;
+
+  background: linear-gradient(145deg, #f2f4f8, #dcdfe6);
+  color: #4b5563 !important;
+
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
-  text-transform: none;
-  letter-spacing: 0;
-  line-height: 1;
+
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.8),
+    inset -1px -1px 2px rgba(0,0,0,0.05);
+
+  transition: all 0.2s ease;
 }
 
 .bg-file-label:hover {
-  background-color: #3a4358;
+  transform: translateY(-2px);
+  color: #2f6fd6 !important;
+
+  box-shadow:
+    4px 4px 10px rgba(0,0,0,0.1),
+    -4px -4px 10px rgba(255,255,255,0.9);
+}
+
+.bg-file-label:active {
+  transform: translateY(0);
+
+  background: linear-gradient(145deg, #dcdfe6, #f2f4f8);
+
+  box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,0.12),
+    inset -2px -2px 5px rgba(255,255,255,0.6);
 }
 
 #bg-file-input {
@@ -192,6 +214,13 @@ h3 {
     inset -3px -3px 6px rgba(255,255,255,0.8);
 }
 
+.row input:hover,
+.row select:hover {
+  box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,0.1),
+    inset -2px -2px 5px rgba(255,255,255,0.95);
+}
+
 .custom-size-row {
   display: flex;
   gap: 12px;
@@ -210,7 +239,9 @@ h3 {
 .row select,
 .row input {
   height: 36px;
-  padding: 8px 10px;
+  padding: 0 10px;     /* 핵심 */
+  line-height: 36px;   /* 핵심 */
+
   border: 1px solid #e8e8e8;
   border-radius: 6px;
   font-size: 0.9rem;
@@ -577,6 +608,7 @@ button {
   }
 
   .bg-file-label {
+    width: 100%;
     grid-area: button;
     display: inline-flex;
     align-items: center;
