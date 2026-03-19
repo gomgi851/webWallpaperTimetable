@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+import Toast from './components/Toast';
 import Settings from './components/Settings';
 import ScheduleInput from './components/ScheduleInput';
 import Preview from './components/Preview';
@@ -60,10 +61,14 @@ export default function App() {
   const [customHeight, setCustomHeight] = useState(1080);
   const [bgImage, setBgImage] = useState(null);
   const [bgFileName, setBgFileName] = useState('');
+  const [bgImageOriginalWidth, setBgImageOriginalWidth] = useState(0);
+  const [bgImageOriginalHeight, setBgImageOriginalHeight] = useState(0);
   const [isBgProcessing, setIsBgProcessing] = useState(false);
   const [courseNameFontSize, setCourseNameFontSize] = useState(20);
   const [courseRoomFontSize, setCourseRoomFontSize] = useState(15);
   const [labelFontSize, setLabelFontSize] = useState(14);
+  const [toastMessage, setToastMessage] = useState(null);
+  const [toastType, setToastType] = useState('info');
   const [paletteColors, setPaletteColors] = useState([
     { r: 100, g: 181, b: 246, a: 200 },
     { r: 41, g: 182, b: 246, a: 200 },
@@ -73,6 +78,12 @@ export default function App() {
     { r: 92, g: 107, b: 192, a: 200 }
   ]);
   const bgProcessTokenRef = useRef(0);
+
+  // Toast 표시 함수
+  const showToast = (message, type = 'info') => {
+    setToastType(type);
+    setToastMessage(message);
+  };
 
   // localStorage에서 로드
   useEffect(() => {
@@ -170,6 +181,8 @@ export default function App() {
         try {
           if (bgProcessTokenRef.current !== currentToken) return;
           setBgImage(img);
+          setBgImageOriginalWidth(img.width);
+          setBgImageOriginalHeight(img.height);
           await new Promise((resolve) => requestAnimationFrame(resolve));
 
           // 팔레트 추출
@@ -187,8 +200,43 @@ export default function App() {
     reader.readAsDataURL(file);
   };
 
+  const handleResolutionChange = (newResolution) => {
+    // "custom" 선택 시: 현재 해상도의 크기를 customWidth/Height에 입력
+    if (newResolution === 'custom') {
+      if (resolution === 'original') {
+        // 원본에서 커스텀으로: 원본 크기 입력
+        setCustomWidth(bgImageOriginalWidth);
+        setCustomHeight(bgImageOriginalHeight);
+      } else {
+        // FHD/QHD 등에서 커스텀으로: 해당 해상도 크기 입력
+        const currentRes = RESOLUTIONS[resolution];
+        setCustomWidth(currentRes.width);
+        setCustomHeight(currentRes.height);
+      }
+    }
+
+    // "original" 선택 시: 배경 이미지 확인
+    if (newResolution === 'original') {
+      if (!bgImage) {
+        showToast('배경화면 이미지를 먼저 선택해주세요.', 'warning');
+        return;
+      }
+    }
+
+    setResolution(newResolution);
+  };
+
   return (
     <div className="container">
+      {toastMessage && (
+        <div className="toast-container">
+          <Toast
+            message={toastMessage}
+            type={toastType}
+            onClose={() => setToastMessage(null)}
+          />
+        </div>
+      )}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1>시간표 배경 생성기</h1>
         <a href="https://github.com/gomgi851" target="_blank" rel="noopener noreferrer" title="GitHub">
@@ -202,7 +250,7 @@ export default function App() {
         bgFileName={bgFileName}
         onBgImageChange={handleBgImage}
         resolution={resolution}
-        onResolutionChange={setResolution}
+        onResolutionChange={handleResolutionChange}
         textColor={textColor}
         onTextColorChange={setTextColor}
         hPos={hPos}
@@ -248,6 +296,7 @@ export default function App() {
         courseRoomFontSize={courseRoomFontSize}
         labelFontSize={labelFontSize}
         paletteColors={paletteColors}
+        onShowToast={showToast}
       />
     </div>
   );

@@ -750,3 +750,5 @@ button {
     width: 100%;
   }
 }
+
+@import './styles/Toast.css';

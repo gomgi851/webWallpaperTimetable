@@ -74,6 +74,7 @@ export default function Settings({
           <select value={resolution} onChange={(e) => onResolutionChange(e.target.value)}>
             <option value="fhd">FHD (1920x1080)</option>
             <option value="qhd">QHD (2560x1440)</option>
+            <option value="original">원본 화질</option>
             <option value="custom">직접 입력</option>
           </select>
         </div>

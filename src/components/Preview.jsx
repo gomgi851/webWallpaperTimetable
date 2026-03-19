@@ -17,7 +17,8 @@ export default function Preview({
   courseNameFontSize,
   courseRoomFontSize,
   labelFontSize,
-  paletteColors
+  paletteColors,
+  onShowToast
 }) {
   const [showResult, setShowResult] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -34,12 +35,12 @@ export default function Preview({
 
   const handleGenerate = async () => {
     if (!bgImage) {
-      alert('배경화면 이미지를 먼저 선택해주세요.');
+      onShowToast('배경화면 이미지를 먼저 선택해주세요.', 'warning');
       return;
     }
 
     if (!paletteColors || paletteColors.length === 0) {
-      alert('색상 추출 중입니다. 잠시만 기다려주세요.');
+      onShowToast('색상 추출 중입니다. 잠시만 기다려주세요.', 'info');
       return;
     }
 
@@ -64,6 +65,10 @@ export default function Preview({
       if (resolution === 'custom') {
         width = customWidth;
         height = customHeight;
+      } else if (resolution === 'original') {
+        // 원본 화질: 배경 이미지의 실제 크기 사용
+        width = bgImage.width;
+        height = bgImage.height;
       } else {
         const res = RESOLUTIONS[resolution];
         width = res.width;
@@ -93,7 +98,7 @@ export default function Preview({
 
       const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
       if (!blob) {
-        alert('이미지 생성에 실패했습니다. 다시 시도해주세요.');
+        onShowToast('이미지 생성에 실패했습니다. 다시 시도해주세요.', 'error');
         return;
       }
 
