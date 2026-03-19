@@ -12,6 +12,7 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
         <div>강의실</div>
         <div></div>
       </div>
+      <div className="name-break-hint">강의명/강의실은 띄어쓰기를 넣으면 줄바꿈되며 최대 2줄까지 표시돼요.</div>
       
       <div id="schedules-container">
         {classes.map((course) => (
@@ -29,7 +30,7 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
             <input
               className="name-input"
               type="text"
-              placeholder="강의명"
+              placeholder="강의명 (띄어쓰기 줄바꿈, 최대 2줄)"
               value={course.name}
               onChange={(e) => onUpdateClass(course.id, 'name', e.target.value)}
             />
@@ -81,7 +82,7 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
             <input
               className="room-input"
               type="text"
-              placeholder="강의실"
+              placeholder="강의실 (띄어쓰기 줄바꿈, 최대 2줄)"
               value={course.room}
               onChange={(e) => onUpdateClass(course.id, 'room', e.target.value)}
             />

@@ -78,6 +78,16 @@ export default function Settings({
           </select>
         </div>
         <div className="setting-item">
+          <label>요일/시간 글씨 크기(px)</label>
+          <input
+            type="number"
+            min="8"
+            max="40"
+            value={labelFontSize}
+            onChange={(e) => onLabelFontSizeChange(parseInt(e.target.value))}
+          />
+        </div>
+        <div className="setting-item">
           <label>강의명 글씨 크기(px)</label>
           <input
             type="number"
@@ -95,16 +105,6 @@ export default function Settings({
             max="40"
             value={courseRoomFontSize}
             onChange={(e) => onCourseRoomFontSizeChange(parseInt(e.target.value))}
-          />
-        </div>
-        <div className="setting-item">
-          <label>요일/시간 글씨 크기(px)</label>
-          <input
-            type="number"
-            min="8"
-            max="40"
-            value={labelFontSize}
-            onChange={(e) => onLabelFontSizeChange(parseInt(e.target.value))}
           />
         </div>
       </div>

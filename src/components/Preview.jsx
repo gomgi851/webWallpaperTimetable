@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TimetableRenderer } from '../lib/canvas-renderer';
 import { RESOLUTIONS } from '../lib/utils';
 
@@ -18,28 +18,17 @@ export default function Preview({
   labelFontSize,
   paletteColors
 }) {
-  const canvasRef = useRef(null);
   const [showResult, setShowResult] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState(null);
-  const [previewSize, setPreviewSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    if (!showResult || !downloadUrl || !canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-
-    img.onload = () => {
-      canvas.width = previewSize.width;
-      canvas.height = previewSize.height;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0);
+    return () => {
+      if (downloadUrl && downloadUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(downloadUrl);
+      }
     };
-
-    img.src = downloadUrl;
-  }, [showResult, downloadUrl, previewSize]);
+  }, [downloadUrl]);
 
   const handleGenerate = async () => {
     if (!bgImage) {
@@ -100,9 +89,17 @@ export default function Preview({
 
       renderer.render();
 
-      const url = canvas.toDataURL('image/png');
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) {
+        alert('이미지 생성에 실패했습니다. 다시 시도해주세요.');
+        return;
+      }
+
+      if (downloadUrl && downloadUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(downloadUrl);
+      }
+      const url = URL.createObjectURL(blob);
       setDownloadUrl(url);
-      setPreviewSize({ width, height });
       setShowResult(true);
     } finally {
       setIsGenerating(false);
@@ -124,8 +121,9 @@ export default function Preview({
       {showResult && (
         <div id="result-container" style={{ textAlign: 'center', marginTop: '30px' }}>
           <h3>배경화면이 완성되었어요</h3>
-          <canvas
-            ref={canvasRef}
+          <img
+            src={downloadUrl}
+            alt="Generated timetable wallpaper"
             id="preview-canvas"
             style={{ maxWidth: '100%', borderRadius: '12px', boxShadow: '0 8px 20px rgba(0,0,0,0.1)' }}
           />
@@ -144,6 +142,23 @@ export default function Preview({
               }}
             >
               이미지 저장하기
+            </a>
+            <a
+              href={downloadUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-block',
+                marginLeft: '8px',
+                padding: '12px 24px',
+                background: '#4a5568',
+                color: '#fff',
+                textDecoration: 'none',
+                borderRadius: '8px',
+                fontWeight: 'bold'
+              }}
+            >
+              새 탭에서 열기
             </a>
           </div>
         </div>

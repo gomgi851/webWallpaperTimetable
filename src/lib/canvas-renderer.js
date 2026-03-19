@@ -291,36 +291,59 @@ export class TimetableRenderer {
 
     if (textWidth <= 0 || textHeight <= 0) return;
 
-    // 강의명 텍스트 (가운데 정렬)
-    this.ctx.fillStyle = `rgb(${this.textColor[0]}, ${this.textColor[1]}, ${this.textColor[2]})`;
-    this.ctx.font = `bold ${this.courseNameFontSize}px Cafe24 Surround, sans-serif`;
+    const nameLineHeight = Math.max(12, this.courseNameFontSize);
+    const roomLineHeight = Math.max(10, this.courseRoomFontSize - 1);
+    const minGap = Math.max(0, Math.round(this.courseRoomFontSize * 0.05));
+    const availableHeight = textHeight;
+
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'top';
 
-    const nameLines = this.wrapTextInBox(this.ctx, course.name, textWidth, 13);
-    const lineHeight = 23;
+    this.ctx.font = `bold ${this.courseNameFontSize}px Cafe24 Surround, sans-serif`;
+    const wrappedNameLines = this.wrapTextInBox(this.ctx, course.name, textWidth, this.courseNameFontSize);
 
-    // 강의명과 강의실 높이 계산
-    const nameHeight = nameLines.length > 0 ? lineHeight * Math.min(nameLines.length, 2) : 0;
-    const roomHeight = height > 70 && course.room ? 18 : 0;
-    const totalHeight = nameHeight + roomHeight;
-    const topOffset = Math.max(padding, (height - totalHeight) / 2);
+    this.ctx.font = `${this.courseRoomFontSize}px Cafe24 Surround, sans-serif`;
+    const wrappedRoomLines = this.wrapTextInBox(this.ctx, course.room || '', textWidth, this.courseRoomFontSize);
 
-    // 강의명 그리기
-    let currentY = y + topOffset;
-    for (let i = 0; i < Math.min(nameLines.length, 2); i++) {
-      this.ctx.fillText(nameLines[i], x + width / 2, currentY);
-      currentY += lineHeight;
+    let nameCount = Math.min(wrappedNameLines.length, 2);
+    let roomCount = height > 70 && course.room ? Math.min(wrappedRoomLines.length, 2) : 0;
+
+    let gap = roomCount > 0 && nameCount > 0 ? minGap : 0;
+    let totalHeight = nameCount * nameLineHeight + roomCount * roomLineHeight + gap;
+
+    if (totalHeight > availableHeight && roomCount > 1) {
+      roomCount = 1;
+      gap = roomCount > 0 && nameCount > 0 ? minGap : 0;
+      totalHeight = nameCount * nameLineHeight + roomCount * roomLineHeight + gap;
+    }
+    if (totalHeight > availableHeight && nameCount > 1) {
+      nameCount = 1;
+      gap = roomCount > 0 && nameCount > 0 ? minGap : 0;
+      totalHeight = nameCount * nameLineHeight + roomCount * roomLineHeight + gap;
+    }
+    if (totalHeight > availableHeight && roomCount > 0) {
+      roomCount = 0;
+      gap = 0;
+      totalHeight = nameCount * nameLineHeight;
     }
 
-    // 강의실 (더 작은 폰트, 가운데 정렬)
-    if (height > 70 && course.room) {
+    let currentY = y + padding + Math.max(0, (availableHeight - totalHeight) / 2);
+
+    this.ctx.fillStyle = `rgb(${this.textColor[0]}, ${this.textColor[1]}, ${this.textColor[2]})`;
+    this.ctx.font = `bold ${this.courseNameFontSize}px Cafe24 Surround, sans-serif`;
+    for (let i = 0; i < nameCount; i++) {
+      this.ctx.fillText(wrappedNameLines[i], x + width / 2, currentY);
+      currentY += nameLineHeight;
+    }
+
+    if (roomCount > 0) {
+      currentY += gap;
       this.ctx.font = `${this.courseRoomFontSize}px Cafe24 Surround, sans-serif`;
-      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'; // 
-      this.ctx.textAlign = 'center';
-      this.ctx.textBaseline = 'top';
-      const roomY = currentY + 2;
-      this.ctx.fillText(course.room, x + width / 2, roomY);
+      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      for (let i = 0; i < roomCount; i++) {
+        this.ctx.fillText(wrappedRoomLines[i], x + width / 2, currentY);
+        currentY += roomLineHeight;
+      }
     }
   }
 

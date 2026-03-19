@@ -113,7 +113,7 @@ h3 {
 
 .settings-row {
   display: flex;
-  gap: 12px;
+  gap: 14px 12px;
   margin-bottom: 12px;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -129,7 +129,7 @@ h3 {
   display: block;
   font-size: 0.75rem;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   color: #333;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -229,6 +229,13 @@ h3 {
 .header-row div {
   text-align: center;
   color: #666;
+}
+
+.name-break-hint {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin: -4px 0 10px;
+  padding-left: 2px;
 }
 
 .row select.day-select {
@@ -344,21 +351,84 @@ h3 {
   }
 
   .settings-row {
-    flex-direction: column;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 10px;
+    row-gap: 14px;
+    align-items: start;
   }
 
   .setting-item {
-    min-width: unset;
+    min-width: 0;
     width: 100%;
+  }
+
+  .setting-item label {
+    padding-left: 2px;
+  }
+
+  .settings-row:first-of-type {
+    grid-template-columns: 1fr;
+  }
+
+  .upload-section {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "label button"
+      "name name";
+    column-gap: 8px;
+    row-gap: 4px;
+    align-items: center;
+  }
+
+  .upload-label {
+    grid-area: label;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    white-space: nowrap;
+    padding-left: 2px;
+  }
+
+  .upload-row {
+    display: contents;
+  }
+
+  .bg-file-label {
+    grid-area: button;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    text-align: center;
+    min-width: 110px;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
+  .file-name {
+    grid-area: name;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.82rem;
   }
 
   .header-row {
     display: none;
   }
 
+  .name-break-hint {
+    margin: 0 0 8px;
+    font-size: 0.74rem;
+  }
+
   .row {
-    grid-template-columns: 64px 1fr 34px;
+    --mobile-slot-width: calc((100% - 34px) / 4);
+    grid-template-columns: var(--mobile-slot-width) 1fr 34px;
     grid-template-areas:
       "day name delete"
       "time time time"
@@ -405,13 +475,13 @@ h3 {
   }
 
   .time-inputs select {
-    width: 100%;
-    min-width: 0;
-    flex: 1 1 0;
+    width: var(--mobile-slot-width);
+    min-width: var(--mobile-slot-width);
+    flex: 0 0 var(--mobile-slot-width);
   }
 
   .time-inputs {
-    gap: 3px;
+    gap: 6px;
     justify-content: flex-start;
     width: 100%;
   }
