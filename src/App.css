@@ -716,7 +716,8 @@ button {
   .row input {
     height: 34px;
     font-size: 0.8rem;
-    padding: 6px 8px;
+    padding: 2px 8px;
+    line-height: 30px;
   }
 
   .time-inputs select {
