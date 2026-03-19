@@ -146,7 +146,7 @@ h3 {
   width: 100%;
   height: 32px;
   padding: 4px 8px;
-  border: 1px solid #ddd;
+  border: 1px solid #e8e8e8;
   border-radius: 6px;
   font-size: 0.85rem;
   font-family: 'Pretendard', sans-serif;
@@ -179,6 +179,17 @@ h3 {
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
+.row select:focus,
+.row input:focus,
+.setting-item select:focus,
+.setting-item input:focus {
+  outline: none;
+  border-color: #2f6fd6;
+  box-shadow:
+    inset 3px 3px 6px rgba(0,0,0,0.12),
+    inset -3px -3px 6px rgba(255,255,255,0.8);
+}
+
 .custom-size-row {
   display: flex;
   gap: 12px;
@@ -198,7 +209,7 @@ h3 {
 .row input {
   height: 36px;
   padding: 6px 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #e8e8e8;
   border-radius: 6px;
   font-size: 0.85rem;
   font-family: 'Pretendard', sans-serif;
