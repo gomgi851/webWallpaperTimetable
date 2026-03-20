@@ -103,6 +103,7 @@ export default function Preview({
       const url = URL.createObjectURL(blob);
       setDownloadUrl(url);
       setShowResult(true);
+      onShowToast('배경화면 생성이 완료되었습니다.', 'success');
     } finally {
       setIsGenerating(false);
     }
