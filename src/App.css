@@ -19,7 +19,7 @@
 
 body {
   margin: 0;
-  padding: 10px 20px;
+  padding: 14px 20px;
   background: linear-gradient(145deg, #f0f2f5, #e2e6ee);
   overflow-y: scroll;
   font-family: 'Pretendard', sans-serif;
@@ -28,18 +28,33 @@ body {
 
 .container {
   width: 100%;
-  max-width: 900px;
+  max-width: 980px;
   margin: 0 auto;
   padding: 0;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.app-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 h1 {
   font-family: 'Do Hyeon', sans-serif !important;
   font-weight: 600;
   text-align: left;
-  margin-top: 5px;
+  margin-top: 3px;
   margin-bottom: 15px;
   font-size: 1.7rem;
+  line-height: 1.2;
   color: #1a1a1a !important;
   flex: 1;
 }
@@ -57,7 +72,7 @@ h3 {
 
 .card {
   background: linear-gradient(145deg, #f8f9fc, #e6e9f0);
-  padding: 20px 26px;
+  padding: 22px 24px;
   border-radius: 16px;
   box-shadow:
     8px 8px 20px rgba(0,0,0,0.08),
@@ -72,6 +87,8 @@ h3 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  vertical-align: middle;
   box-sizing: border-box;
   height: 36px;
   padding: 0 16px;
@@ -136,11 +153,11 @@ h3 {
 
 .settings-row {
   display: flex;
-  gap: 14px 12px;
-  margin-bottom: 12px;
+  gap: 14px 14px;
+  margin-bottom: 14px;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .setting-item {
@@ -152,10 +169,20 @@ h3 {
   display: block;
   font-size: 0.75rem;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   color: #333;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.setting-item .bg-file-label,
+.setting-item .upload-font-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .color-setting-item {
@@ -168,7 +195,7 @@ h3 {
 .setting-item select,
 .setting-item input[type="number"] {
   width: 100%;
-  height: 32px;
+  height: 36px;
   padding: 4px 8px;
   border: 1px solid #e8e8e8;
   border-radius: 6px;
@@ -587,10 +614,51 @@ button {
   }
 }
 
+@media (max-width: 920px) {
+  .top-settings-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr);
+    align-items: flex-end;
+    gap: 8px;
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+
+  .top-settings-row .setting-item {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .top-settings-row .font-row-item {
+    min-width: 0;
+  }
+
+  .top-settings-row .color-setting-item {
+    min-width: 0;
+  }
+}
+
 @media (max-width: 720px) {
   .container {
     max-width: 100%;
     padding: 0 8px;
+  }
+
+  .app-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .app-header h1 {
+    margin: 0;
+    width: 100%;
+    font-size: 1.45rem;
+  }
+
+  .app-header-actions {
+    margin-left: auto;
   }
 
   .settings-row {
@@ -610,29 +678,61 @@ button {
     padding-left: 2px;
   }
 
-  .top-settings-row {
-    flex-direction: column;
-    flex-wrap: wrap;
+  .settings-row.top-settings-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+
+  .settings-row.top-settings-row .setting-item {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .settings-row.top-settings-row > .setting-item.font-row-item {
+    grid-column: 1 / -1;
   }
 
   .font-row-item {
     min-width: 0;
   }
 
+  .font-select-row {
+    grid-template-columns: minmax(116px, max-content) minmax(0, 1fr) 30px;
+  }
+
+  .font-row-item .upload-font-btn {
+    height: 40px;
+    padding: 0 14px;
+    font-size: 0.82rem;
+    line-height: 1.2;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+
   .font-select {
+    flex: 1;
     max-width: none;
   }
 
   .upload-row {
     flex-wrap: wrap;
+    align-items: center;
   }
 
 
   .bg-file-label {
     min-width: 100px;
-    font-size: 0.82rem;
     padding: 0 12px;
+  }
+
+  .settings-row.top-settings-row .setting-item .bg-file-label,
+  .settings-row.top-settings-row .setting-item .upload-font-btn {
+    font-size: 0.82rem;
+    line-height: 1.2;
   }
 
   .file-applied {
@@ -732,10 +832,12 @@ button {
    폰트 선택 UI
 ========================= */
 .font-select-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content minmax(220px, 1fr) 30px;
   gap: 6px;
   align-items: center;
-  flex-wrap: nowrap;
+  min-width: 0;
+  width: 100%;
 }
 
 .upload-row {
@@ -743,13 +845,14 @@ button {
   align-items: center;
   gap: 8px;
   flex-wrap: nowrap;
+  min-height: 36px;
 }
 
 .font-select {
-  flex: 1;
+  width: 100%;
   min-width: 0;
-  max-width: 180px;
-  height: 32px;
+  max-width: none;
+  height: 36px;
   padding: 4px 28px 4px 8px;
   border: 1px solid #e8e8e8;
   border-radius: 6px;
@@ -790,8 +893,7 @@ button {
 
 /* X 버튼 숨김 — visibility로 공간 유지하여 UPLOAD FONT 위치 고정 */
 .font-delete-btn--hidden {
-  visibility: hidden;
-  pointer-events: none;
+  display: none;
 }
 
 .font-delete-btn:hover {
@@ -802,12 +904,23 @@ button {
     5px 5px 10px rgba(0,0,0,0.2);
 }
 
+.font-delete-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.2),
+    inset -1px -1px 2px rgba(0,0,0,0.15),
+    2px 2px 6px rgba(0,0,0,0.12);
+}
+
 /* UPLOAD FONT 버튼 (neumorphic) — bg-file-label과 동일 크기 */
 .upload-font-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+  vertical-align: middle;
   box-sizing: border-box;
   height: 36px;
   padding: 0 16px;
@@ -902,14 +1015,60 @@ button {
 
 /* 첫 번째 설정 줄: 배경 선택 | 시간표 폰트 | 표 색상 */
 .top-settings-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr);
   align-items: flex-end;
-  flex-wrap: nowrap;
-  gap: 16px;
+  gap: 8px;
+}
+
+.top-settings-row .setting-item {
+  width: 100%;
+  min-width: 0;
+}
+
+.top-settings-row .upload-row {
+  display: inline-flex;
+  width: 100%;
+  gap: 4px;
+}
+
+.top-settings-row > .setting-item:nth-child(1) {
+  grid-column: 1;
+}
+
+.top-settings-row > .setting-item:nth-child(2) {
+  grid-column: 2;
+}
+
+.top-settings-row > .setting-item:nth-child(3) {
+  grid-column: 3;
+}
+
+.top-settings-row > .font-row-item {
+  grid-column: 3;
+  justify-self: stretch;
+}
+
+.top-settings-row > .font-row-item .font-select-row {
+  width: 100%;
+  grid-template-columns: max-content minmax(0, 1fr) 30px;
 }
 
 .font-row-item {
-  flex: 2;
-  min-width: 220px;
+  min-width: 0;
+  margin-left: 0;
+}
+
+.color-setting-item {
+  min-width: 110px;
+}
+
+.top-settings-row .color-setting-item {
+  align-items: flex-start;
+}
+
+.top-settings-row .color-setting-item .color-button-group {
+  justify-content: flex-start;
 }
 
 /* 다크모드 숫자 스핀 버튼 — SVG 화살표 이미지로 교체 */

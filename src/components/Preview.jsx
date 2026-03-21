@@ -117,7 +117,7 @@ export default function Preview({
           disabled={isBusy}
           aria-busy={isGenerating || isBgProcessing}
         >
-          {isBgProcessing ? 'loading...' : (isGenerating ? '생성 중...' : '배경화면 생성하기')}
+          {isBgProcessing ? '분석 중...' : (isGenerating ? '생성 중...' : '배경화면 생성하기')}
         </button>
       </div>
 

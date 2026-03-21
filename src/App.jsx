@@ -101,17 +101,6 @@ export default function App() {
   // Apply theme class to body whenever theme changes
   useEffect(() => {
     document.body.classList.toggle('theme-dark', theme === 'dark');
-    // #region agent log
-    requestAnimationFrame(() => {
-      const numInput = document.querySelector('.setting-item input[type="number"]');
-      const rowSelect = document.querySelector('.row select');
-      const rowInput = document.querySelector('.row input[type="text"]');
-      const numBg = numInput ? getComputedStyle(numInput).backgroundImage : 'not found';
-      const selBg = rowSelect ? getComputedStyle(rowSelect).backgroundImage : 'not found';
-      const txtBg = rowInput ? getComputedStyle(rowInput).backgroundImage : 'not found';
-      fetch('http://127.0.0.1:7760/ingest/57654366-77da-4c45-97e3-5e0819221d53',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e202cd'},body:JSON.stringify({sessionId:'e202cd',location:'App.jsx:theme-effect',message:'dark mode computed bg-image',data:{theme,numInputBg:numBg,rowSelectBg:selBg,rowTextInputBg:txtBg},timestamp:Date.now(),runId:'post-fix-2',hypothesisId:'H-A,H-B,H-C'})}).catch(()=>{});
-    });
-    // #endregion
   }, [theme]);
 
   // On mount: restore from localStorage then re-register custom fonts from IDB
@@ -237,6 +226,11 @@ export default function App() {
   };
 
   const handleFontDelete = async (id) => {
+    if (id === DEFAULT_FONT_ID) {
+      showToast('기본 폰트(Cafe24 Surround)는 삭제 불가합니다.', 'warning');
+      return;
+    }
+
     try {
       await deleteFontFromIDB(id);
       setCustomFonts((prev) => prev.filter((f) => f.id !== id));
@@ -359,9 +353,9 @@ export default function App() {
           />
         </div>
       )}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <div className="app-header">
         <h1>시간표 배경 생성기</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="app-header-actions">
           <label
             className="theme-switch"
             title={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}

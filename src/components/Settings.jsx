@@ -51,11 +51,31 @@ export default function Settings({
 
       {/* 1번 줄: 배경 선택 | 시간표 폰트 | 표 색상 — 한 줄 */}
       <div className="settings-row top-settings-row">
+        <div className="setting-item color-setting-item">
+          <label>표 색상</label>
+          <div className="color-button-group">
+            <button
+              className={`color-button ${textColor === 'white' ? 'selected' : ''}`}
+              data-color="white"
+              style={{ backgroundColor: 'white', borderColor: '#333' }}
+              onClick={() => onTextColorChange('white')}
+              aria-label="흰색 글자"
+            />
+            <button
+              className={`color-button ${textColor === 'black' ? 'selected' : ''}`}
+              data-color="black"
+              style={{ backgroundColor: 'rgb(30,30,30)', borderColor: '#ccc' }}
+              onClick={() => onTextColorChange('black')}
+              aria-label="검은색 글자"
+            />
+          </div>
+        </div>
+
         <div className="setting-item">
           <label>배경 선택</label>
           <div className="upload-row">
             <label htmlFor="bg-file-input" className="bg-file-label">
-              {bgFileName ? '변경하기' : 'choose file'}
+              {bgFileName ? '변경하기' : '파일 선택'}
             </label>
             <input
               id="bg-file-input"
@@ -72,6 +92,20 @@ export default function Settings({
         <div className="setting-item font-row-item">
           <label>시간표 폰트</label>
           <div className="font-select-row">
+            <label
+              htmlFor="font-file-input"
+              className="upload-font-btn"
+              title=".ttf .otf .woff .woff2 · 5MB"
+            >
+              폰트 업로드
+            </label>
+            <input
+              id="font-file-input"
+              ref={fontInputRef}
+              type="file"
+              accept=".ttf,.otf,.woff,.woff2"
+              onChange={handleFontFileChange}
+            />
             <select
               value={selectedFontId}
               onChange={(e) => onFontSelect(e.target.value)}
@@ -82,48 +116,14 @@ export default function Settings({
                 <option key={f.id} value={f.id}>{f.name}</option>
               ))}
             </select>
-            {/* 항상 렌더링 — visibility로 공간 유지, UPLOAD FONT 위치 고정 */}
             <button
-              className={`font-delete-btn${isCustomFontSelected ? '' : ' font-delete-btn--hidden'}`}
-              onClick={() => isCustomFontSelected && onFontDelete(selectedFontId)}
-              tabIndex={isCustomFontSelected ? 0 : -1}
+              className="font-delete-btn"
+              onClick={() => onFontDelete(selectedFontId)}
               title="선택된 폰트 삭제"
               aria-label="선택된 폰트 삭제"
             >
               ×
             </button>
-            <label
-              htmlFor="font-file-input"
-              className="upload-font-btn"
-              title=".ttf .otf .woff .woff2 · 5MB"
-            >
-              upload font
-            </label>
-            <input
-              id="font-file-input"
-              ref={fontInputRef}
-              type="file"
-              accept=".ttf,.otf,.woff,.woff2"
-              onChange={handleFontFileChange}
-            />
-          </div>
-        </div>
-
-        <div className="setting-item color-setting-item">
-          <label>표 색상</label>
-          <div className="color-button-group">
-            <button
-              className={`color-button ${textColor === 'white' ? 'selected' : ''}`}
-              data-color="white"
-              style={{ backgroundColor: 'white', borderColor: '#333' }}
-              onClick={() => onTextColorChange('white')}
-            />
-            <button
-              className={`color-button ${textColor === 'black' ? 'selected' : ''}`}
-              data-color="black"
-              style={{ backgroundColor: 'rgb(30,30,30)', borderColor: '#ccc' }}
-              onClick={() => onTextColorChange('black')}
-            />
           </div>
         </div>
       </div>
