@@ -106,7 +106,9 @@ h3 {
 
   box-shadow:
     inset 1px 1px 2px rgba(255,255,255,0.8),
-    inset -1px -1px 2px rgba(0,0,0,0.05);
+    inset -1px -1px 2px rgba(0,0,0,0.05),
+    3px 3px 8px rgba(0,0,0,0.08),
+    -2px -2px 6px rgba(255,255,255,0.9);
 
   transition: all 0.2s ease;
 }
@@ -116,6 +118,7 @@ h3 {
   display: inline-flex;
   align-items: center;
   gap: 3px;
+  margin-left: 8px;
   font-size: 0.78rem;
   font-weight: 600;
   color: #4caf50;
@@ -180,6 +183,7 @@ h3 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 96px;
   margin-bottom: 0;
   text-transform: none;
   letter-spacing: 0;
@@ -703,16 +707,6 @@ button {
     grid-template-columns: minmax(116px, max-content) minmax(0, 1fr) 30px;
   }
 
-  .font-row-item .upload-font-btn {
-    height: 40px;
-    padding: 0 14px;
-    font-size: 0.82rem;
-    line-height: 1.2;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-  }
-
   .font-select {
     flex: 1;
     max-width: none;
@@ -723,14 +717,11 @@ button {
     align-items: center;
   }
 
-
-  .bg-file-label {
-    min-width: 100px;
-    padding: 0 12px;
-  }
-
   .settings-row.top-settings-row .setting-item .bg-file-label,
   .settings-row.top-settings-row .setting-item .upload-font-btn {
+    width: 100px;
+    height: 40px;
+    padding: 0 14px;
     font-size: 0.82rem;
     line-height: 1.2;
   }
@@ -1121,7 +1112,9 @@ body.theme-dark .bg-file-label {
   color: #8aa8d8 !important;
   box-shadow:
     inset 1px 1px 2px rgba(255,255,255,0.05),
-    inset -1px -1px 2px rgba(0,0,0,0.35);
+    inset -1px -1px 2px rgba(0,0,0,0.35),
+    3px 3px 8px rgba(0,0,0,0.35),
+    -2px -2px 6px rgba(255,255,255,0.02);
 }
 
 body.theme-dark .bg-file-label:hover {
