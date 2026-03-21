@@ -5,6 +5,15 @@ import Settings from './components/Settings';
 import ScheduleInput from './components/ScheduleInput';
 import Preview from './components/Preview';
 import { RESOLUTIONS, extractPaletteFromImageAsync } from './lib/utils';
+import {
+  DEFAULT_FONT_ID,
+  DEFAULT_FONT_FAMILY,
+  getAllFontsFromIDB,
+  saveFontToIDB,
+  deleteFontFromIDB,
+  isValidFontFile,
+  registerFontFromIDB,
+} from './lib/font-storage';
 
 const STORAGE_KEY = 'timetable_settings';
 
@@ -77,16 +86,38 @@ export default function App() {
     { r: 13, g: 71, b: 161, a: 200 },
     { r: 92, g: 107, b: 192, a: 200 }
   ]);
+
+  const [theme, setTheme] = useState('light');
+  const [selectedFontId, setSelectedFontId] = useState(DEFAULT_FONT_ID);
+  const [customFonts, setCustomFonts] = useState([]);
+
   const bgProcessTokenRef = useRef(0);
 
-  // Toast 표시 함수
   const showToast = (message, type = 'info') => {
     setToastType(type);
     setToastMessage(message);
   };
 
-  // localStorage에서 로드
+  // Apply theme class to body whenever theme changes
   useEffect(() => {
+    document.body.classList.toggle('theme-dark', theme === 'dark');
+    // #region agent log
+    requestAnimationFrame(() => {
+      const numInput = document.querySelector('.setting-item input[type="number"]');
+      const rowSelect = document.querySelector('.row select');
+      const rowInput = document.querySelector('.row input[type="text"]');
+      const numBg = numInput ? getComputedStyle(numInput).backgroundImage : 'not found';
+      const selBg = rowSelect ? getComputedStyle(rowSelect).backgroundImage : 'not found';
+      const txtBg = rowInput ? getComputedStyle(rowInput).backgroundImage : 'not found';
+      fetch('http://127.0.0.1:7760/ingest/57654366-77da-4c45-97e3-5e0819221d53',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e202cd'},body:JSON.stringify({sessionId:'e202cd',location:'App.jsx:theme-effect',message:'dark mode computed bg-image',data:{theme,numInputBg:numBg,rowSelectBg:selBg,rowTextInputBg:txtBg},timestamp:Date.now(),runId:'post-fix-2',hypothesisId:'H-A,H-B,H-C'})}).catch(()=>{});
+    });
+    // #endregion
+  }, [theme]);
+
+  // On mount: restore from localStorage then re-register custom fonts from IDB
+  useEffect(() => {
+    let restoredFontId = DEFAULT_FONT_ID;
+
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
@@ -103,10 +134,39 @@ export default function App() {
         setCourseNameFontSize(data.courseNameFontSize || 20);
         setCourseRoomFontSize(data.courseRoomFontSize || 15);
         setLabelFontSize(data.labelFontSize || 14);
+
+        const savedTheme = data.theme || 'light';
+        setTheme(savedTheme);
+        // Apply immediately to avoid FOUC (inline script in index.html handles initial load)
+        document.body.classList.toggle('theme-dark', savedTheme === 'dark');
+
+        restoredFontId = data.selectedFontId || DEFAULT_FONT_ID;
+        setSelectedFontId(restoredFontId);
       } catch (e) {
         console.error('Failed to load settings:', e);
       }
     }
+
+    // Load custom fonts from IndexedDB
+    getAllFontsFromIDB()
+      .then((records) => {
+        const meta = records.map((r) => ({ id: r.id, name: r.name }));
+        setCustomFonts(meta);
+
+        if (restoredFontId !== DEFAULT_FONT_ID) {
+          const found = meta.find((f) => f.id === restoredFontId);
+          if (found) {
+            registerFontFromIDB(found.id).catch(() => {
+              setSelectedFontId(DEFAULT_FONT_ID);
+            });
+          } else {
+            setSelectedFontId(DEFAULT_FONT_ID);
+          }
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load fonts from IDB:', err);
+      });
   }, []);
 
   // 개발 도구용: window.showToast 노출
@@ -131,14 +191,64 @@ export default function App() {
       customHeight,
       courseNameFontSize,
       courseRoomFontSize,
-      labelFontSize
+      labelFontSize,
+      theme,
+      selectedFontId,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
   };
 
   useEffect(() => {
     saveState();
-  }, [classes, textColor, hPos, vPos, resolution, horizontalSizePercent, verticalSizePercent, customWidth, customHeight, courseNameFontSize, courseRoomFontSize, labelFontSize]);
+  }, [
+    classes, textColor, hPos, vPos, resolution,
+    horizontalSizePercent, verticalSizePercent,
+    customWidth, customHeight,
+    courseNameFontSize, courseRoomFontSize, labelFontSize,
+    theme, selectedFontId,
+  ]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  const handleFontUpload = async (file) => {
+    if (!isValidFontFile(file)) {
+      showToast('지원하지 않는 파일 형식입니다. (.ttf, .otf, .woff, .woff2)', 'error');
+      return;
+    }
+    const MAX_SIZE = 5 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      showToast('폰트 파일 크기가 5MB를 초과합니다.', 'error');
+      return;
+    }
+    const id = `font_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const name = file.name.replace(/\.[^.]+$/, '');
+    try {
+      await saveFontToIDB({ id, name, blob: file });
+      await registerFontFromIDB(id);
+      setCustomFonts((prev) => [...prev, { id, name }]);
+      setSelectedFontId(id);
+      showToast(`"${name}" 폰트가 추가되었습니다.`, 'success');
+    } catch (e) {
+      console.error('Font upload failed:', e);
+      showToast('폰트 추가에 실패했습니다.', 'error');
+    }
+  };
+
+  const handleFontDelete = async (id) => {
+    try {
+      await deleteFontFromIDB(id);
+      setCustomFonts((prev) => prev.filter((f) => f.id !== id));
+      if (selectedFontId === id) setSelectedFontId(DEFAULT_FONT_ID);
+      showToast('폰트가 삭제되었습니다.', 'success');
+    } catch (e) {
+      showToast('폰트 삭제에 실패했습니다.', 'error');
+    }
+  };
+
+  const currentFontFamily =
+    selectedFontId === DEFAULT_FONT_ID ? DEFAULT_FONT_FAMILY : selectedFontId;
 
   const addClass = () => {
     const newClass = {
@@ -155,21 +265,20 @@ export default function App() {
   };
 
   const updateClass = (id, field, value) => {
-    setClasses(classes.map(c => 
+    setClasses(classes.map((c) =>
       c.id === id ? { ...c, [field]: value } : c
     ));
   };
 
   const deleteClass = (id) => {
-    setClasses(classes.filter(c => c.id !== id));
+    setClasses(classes.filter((c) => c.id !== id));
   };
 
   const handleBgImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // 파일 크기 확인 (20MB 제한)
-    const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+    const MAX_FILE_SIZE = 40 * 1024 * 1024; // 40MB
     if (file.size > MAX_FILE_SIZE) {
       showToast('파일 크기가 20MB를 초과합니다. 더 작은 이미지를 선택해주세요.', 'error');
       return;
@@ -202,7 +311,6 @@ export default function App() {
           setBgImageOriginalHeight(img.height);
           await new Promise((resolve) => requestAnimationFrame(resolve));
 
-          // 팔레트 추출
           const palette = await extractPaletteFromImageAsync(img, 8, 10);
           if (bgProcessTokenRef.current !== currentToken) return;
           setPaletteColors(palette.blockColors);
@@ -219,21 +327,17 @@ export default function App() {
   };
 
   const handleResolutionChange = (newResolution) => {
-    // "custom" 선택 시: 현재 해상도의 크기를 customWidth/Height에 입력
     if (newResolution === 'custom') {
       if (resolution === 'original') {
-        // 원본에서 커스텀으로: 원본 크기 입력
         setCustomWidth(bgImageOriginalWidth);
         setCustomHeight(bgImageOriginalHeight);
       } else {
-        // FHD/QHD 등에서 커스텀으로: 해당 해상도 크기 입력
         const currentRes = RESOLUTIONS[resolution];
         setCustomWidth(currentRes.width);
         setCustomHeight(currentRes.height);
       }
     }
 
-    // "original" 선택 시: 배경 이미지 확인
     if (newResolution === 'original') {
       if (!bgImage) {
         showToast('배경화면 이미지를 먼저 선택해주세요.', 'warning');
@@ -257,11 +361,33 @@ export default function App() {
       )}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1>시간표 배경 생성기</h1>
-        <a href="https://github.com/gomgi851" target="_blank" rel="noopener noreferrer" title="GitHub">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style={{ color: '#1a1a1a' }}>
-            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-          </svg>
-        </a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <label
+            className="theme-switch"
+            title={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+          >
+            <input
+              type="checkbox"
+              checked={theme === 'dark'}
+              onChange={toggleTheme}
+              aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            />
+            <span className="switch-track">
+              <span className="switch-thumb">{theme === 'dark' ? '☀' : '☾'}</span>
+            </span>
+          </label>
+          <a href="https://github.com/gomgi851" target="_blank" rel="noopener noreferrer" title="GitHub">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="github-icon"
+            >
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+            </svg>
+          </a>
+        </div>
       </div>
 
       <Settings
@@ -289,6 +415,11 @@ export default function App() {
         onCourseRoomFontSizeChange={setCourseRoomFontSize}
         labelFontSize={labelFontSize}
         onLabelFontSizeChange={setLabelFontSize}
+        customFonts={customFonts}
+        selectedFontId={selectedFontId}
+        onFontSelect={setSelectedFontId}
+        onFontUpload={handleFontUpload}
+        onFontDelete={handleFontDelete}
       />
 
       <ScheduleInput
@@ -315,6 +446,8 @@ export default function App() {
         labelFontSize={labelFontSize}
         paletteColors={paletteColors}
         onShowToast={showToast}
+        fontFamily={currentFontFamily}
+        selectedFontId={selectedFontId}
       />
     </div>
   );

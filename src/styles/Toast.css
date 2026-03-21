@@ -138,3 +138,37 @@
     max-width: none;
   }
 }
+
+/* 다크모드 */
+body.theme-dark .toast {
+  background: #1e2232;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+
+body.theme-dark .toast-message {
+  color: #b8c2de;
+}
+
+body.theme-dark .toast-close {
+  color: #4a5470;
+}
+
+body.theme-dark .toast-close:hover {
+  color: #8a9ab8;
+}
+
+body.theme-dark .toast-error {
+  background: linear-gradient(145deg, #2e1a1a, #261414);
+}
+
+body.theme-dark .toast-success {
+  background: linear-gradient(145deg, #1a2e1a, #142614);
+}
+
+body.theme-dark .toast-warning {
+  background: linear-gradient(145deg, #2e2414, #26200e);
+}
+
+body.theme-dark .toast-info {
+  background: linear-gradient(145deg, #1a2038, #14182e);
+}

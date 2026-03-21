@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Pretendard:wght@400;500;700&display=swap');
+@import './styles/Toast.css';
 
 @font-face {
   font-family: 'Cafe24 Surround';
@@ -66,32 +67,16 @@ h3 {
   width: 100%;
 }
 
-.upload-section {
-  text-align: left;
-  margin-bottom: 0;
-}
-
-.upload-row {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.upload-label {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #333;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
 
 .bg-file-label {
-  display: inline-block;
-  padding: 10px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 36px;
+  padding: 0 16px;
+  flex-shrink: 0;
+  line-height: 1;
 
   background: linear-gradient(145deg, #f2f4f8, #dcdfe6);
   color: #4b5563 !important;
@@ -100,12 +85,25 @@ h3 {
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
+  white-space: nowrap;
 
   box-shadow:
     inset 1px 1px 2px rgba(255,255,255,0.8),
     inset -1px -1px 2px rgba(0,0,0,0.05);
 
   transition: all 0.2s ease;
+}
+
+/* 배경 적용됨 표시 */
+.file-applied {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #4caf50;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .bg-file-label:hover {
@@ -131,10 +129,10 @@ h3 {
   display: none;
 }
 
-.file-name {
-  font-size: 0.875rem;
-  color: #666;
+#font-file-input {
+  display: none;
 }
+
 
 .settings-row {
   display: flex;
@@ -165,6 +163,7 @@ h3 {
   flex-direction: column;
   align-items: flex-start;
 }
+
 
 .setting-item select,
 .setting-item input[type="number"] {
@@ -611,55 +610,33 @@ button {
     padding-left: 2px;
   }
 
-  .settings-row:first-of-type {
-    grid-template-columns: 1fr;
+  .top-settings-row {
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
-  .upload-section {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-areas:
-      "label button"
-      "name name";
-    column-gap: 8px;
-    row-gap: 4px;
-    align-items: center;
+  .font-row-item {
+    min-width: 0;
   }
 
-  .upload-label {
-    grid-area: label;
-    display: flex;
-    align-items: center;
-    margin-bottom: 0;
-    white-space: nowrap;
-    padding-left: 2px;
+  .font-select {
+    max-width: none;
   }
 
   .upload-row {
-    display: contents;
+    flex-wrap: wrap;
   }
+
 
   .bg-file-label {
-    width: 100%;
-    grid-area: button;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    justify-self: center;
-    text-align: center;
-    min-width: 110px;
-    padding: 8px 12px;
+    min-width: 100px;
     font-size: 0.82rem;
-    white-space: nowrap;
+    padding: 0 12px;
   }
 
-  .file-name {
-    grid-area: name;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.82rem;
+  .file-applied {
+    font-size: 0.75rem;
   }
 
   .header-row {
@@ -751,4 +728,445 @@ button {
   }
 }
 
-@import './styles/Toast.css';
+/* =========================
+   폰트 선택 UI
+========================= */
+.font-select-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.upload-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.font-select {
+  flex: 1;
+  min-width: 0;
+  max-width: 180px;
+  height: 32px;
+  padding: 4px 28px 4px 8px;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-family: 'Pretendard', sans-serif;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #ffffff;
+  color: #1a1a1a;
+  background-image: url('/arrow.png');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.font-delete-btn {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  padding: 0;
+  background: linear-gradient(145deg, #ff6b6b, #d64545);
+  color: white !important;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1;
+  transition: all 0.2s;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.3),
+    inset -1px -1px 2px rgba(0,0,0,0.15),
+    3px 3px 8px rgba(0,0,0,0.15);
+}
+
+/* X 버튼 숨김 — visibility로 공간 유지하여 UPLOAD FONT 위치 고정 */
+.font-delete-btn--hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.font-delete-btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.3),
+    inset -1px -1px 2px rgba(0,0,0,0.15),
+    5px 5px 10px rgba(0,0,0,0.2);
+}
+
+/* UPLOAD FONT 버튼 (neumorphic) — bg-file-label과 동일 크기 */
+.upload-font-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+  height: 36px;
+  padding: 0 16px;
+  flex-shrink: 0;
+  line-height: 1;
+  background: linear-gradient(145deg, #f2f4f8, #dcdfe6);
+  color: #4b5563 !important;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.8),
+    inset -1px -1px 2px rgba(0,0,0,0.05),
+    3px 3px 8px rgba(0,0,0,0.08),
+    -2px -2px 6px rgba(255,255,255,0.9);
+  transition: all 0.2s ease;
+}
+
+.upload-font-btn:hover {
+  transform: translateY(-1px);
+  color: #2f6fd6 !important;
+  box-shadow:
+    4px 4px 10px rgba(0,0,0,0.1),
+    -4px -4px 10px rgba(255,255,255,0.9);
+}
+
+.upload-font-btn:active {
+  transform: translateY(0);
+  background: linear-gradient(145deg, #dcdfe6, #f2f4f8);
+  box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,0.12),
+    inset -2px -2px 5px rgba(255,255,255,0.6);
+}
+
+/* =========================
+   다크모드 토글 스위치
+========================= */
+.theme-switch {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.theme-switch input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.switch-track {
+  position: relative;
+  width: 56px;
+  height: 28px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #d4d8e4, #eef0f6);
+  box-shadow:
+    inset 3px 3px 7px rgba(0,0,0,0.12),
+    inset -3px -3px 7px rgba(255,255,255,0.9);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #f4f6fc, #dde0ea);
+  box-shadow:
+    3px 3px 7px rgba(0,0,0,0.15),
+    -2px -2px 5px rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #7080a0;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.theme-switch:has(input:checked) .switch-thumb {
+  transform: translateX(28px);
+  color: #c8a820;
+}
+
+/* 첫 번째 설정 줄: 배경 선택 | 시간표 폰트 | 표 색상 */
+.top-settings-row {
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  gap: 16px;
+}
+
+.font-row-item {
+  flex: 2;
+  min-width: 220px;
+}
+
+/* 다크모드 숫자 스핀 버튼 — SVG 화살표 이미지로 교체 */
+body.theme-dark input[type="number"]::-webkit-inner-spin-button,
+body.theme-dark input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  filter: invert(0.7) brightness(1.4);
+  cursor: pointer;
+}
+
+/* GitHub 아이콘 */
+.github-icon {
+  color: #1a1a1a;
+  display: block;
+}
+
+/* =========================
+   다크모드 전체 오버라이드
+========================= */
+body.theme-dark {
+  background: linear-gradient(145deg, #1a1d24, #131620);
+  color: #c8cfe0;
+}
+
+body.theme-dark * {
+  color: inherit;
+}
+
+body.theme-dark h1 {
+  color: #e4e8f4 !important;
+}
+
+body.theme-dark h3 {
+  color: #8fa0c2;
+}
+
+body.theme-dark .card {
+  background: linear-gradient(145deg, #232838, #1b1f2c);
+  box-shadow:
+    8px 8px 20px rgba(0,0,0,0.45),
+    -8px -8px 20px rgba(255,255,255,0.03);
+}
+
+body.theme-dark .setting-item label {
+  color: #7a8aaa;
+}
+
+body.theme-dark .bg-file-label {
+  background: linear-gradient(145deg, #2a3148, #1f2538);
+  color: #8aa8d8 !important;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.05),
+    inset -1px -1px 2px rgba(0,0,0,0.35);
+}
+
+body.theme-dark .bg-file-label:hover {
+  color: #6ea8ff !important;
+  box-shadow:
+    4px 4px 10px rgba(0,0,0,0.35),
+    -4px -4px 10px rgba(255,255,255,0.03);
+}
+
+body.theme-dark .bg-file-label:active {
+  background: linear-gradient(145deg, #1f2538, #2a3148);
+  box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,0.45),
+    inset -2px -2px 5px rgba(255,255,255,0.04);
+}
+
+body.theme-dark .file-applied {
+  color: #66bb6a;
+}
+
+body.theme-dark .setting-item select,
+body.theme-dark .setting-item input[type="number"],
+body.theme-dark .font-select {
+  background-color: #1c2032;
+  color: #b8c2de;
+  border-color: #363c54;
+}
+
+/* 셀렉트만 커스텀 화살표 적용 — number input에는 절대 적용 안 함 */
+body.theme-dark .setting-item select,
+body.theme-dark .font-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%237a8aaa' d='M8 10L3 5h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px 16px;
+}
+
+body.theme-dark .setting-item input[type="number"] {
+  background-image: none;
+}
+
+body.theme-dark .setting-item select:focus,
+body.theme-dark .setting-item input:focus,
+body.theme-dark .font-select:focus {
+  border-color: #4a7acf;
+  box-shadow:
+    inset 3px 3px 6px rgba(0,0,0,0.3),
+    inset -3px -3px 6px rgba(255,255,255,0.03);
+}
+
+body.theme-dark .color-button.selected {
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
+}
+
+body.theme-dark .header-row {
+  border-bottom-color: #2e3450;
+}
+
+body.theme-dark .header-row div {
+  color: #4a5470;
+}
+
+body.theme-dark .name-break-hint {
+  color: #4a5470;
+}
+
+body.theme-dark .row {
+  border-bottom-color: rgba(200,210,240,0.08);
+}
+
+body.theme-dark .row select,
+body.theme-dark .row input {
+  background-color: #1c2032;
+  color: #b8c2de;
+  border-color: #363c54;
+}
+
+/* 수업 입력 영역: 셀렉트만 화살표, 텍스트/숫자 input은 배경이미지 없음 */
+body.theme-dark .row select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%237a8aaa' d='M8 10L3 5h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px 16px;
+}
+
+body.theme-dark .row input {
+  background-image: none;
+}
+
+body.theme-dark .time-inputs span {
+  color: #4a5470;
+}
+
+body.theme-dark .add-btn {
+  background: linear-gradient(145deg, #2a3148, #1f2538);
+  color: #7a8aaa;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.04),
+    inset -1px -1px 2px rgba(0,0,0,0.25);
+}
+
+body.theme-dark .add-btn:hover {
+  color: #6ea8ff;
+  box-shadow:
+    4px 4px 10px rgba(0,0,0,0.35),
+    -4px -4px 10px rgba(255,255,255,0.03);
+}
+
+body.theme-dark .add-btn:active {
+  background: linear-gradient(145deg, #1f2538, #2a3148);
+  box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,0.4),
+    inset -2px -2px 5px rgba(255,255,255,0.03);
+}
+
+body.theme-dark .generate-btn:disabled,
+body.theme-dark .generate-btn.is-busy {
+  color: #4a5470;
+  background: linear-gradient(145deg, #252a3a, #1c2030);
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.03),
+    inset -1px -1px 2px rgba(0,0,0,0.25),
+    5px 5px 10px rgba(0,0,0,0.3),
+    -4px -4px 8px rgba(255,255,255,0.02);
+}
+
+body.theme-dark .result-save-btn {
+  color: #6ea8ff;
+  background: linear-gradient(145deg, #1e2a44, #18213a);
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.04),
+    inset -1px -1px 2px rgba(0,0,0,0.3),
+    6px 6px 14px rgba(0,0,0,0.35),
+    -4px -4px 10px rgba(255,255,255,0.02);
+}
+
+body.theme-dark .result-save-btn:hover {
+  background: linear-gradient(145deg, #263556, #1e2a44);
+}
+
+body.theme-dark .result-open-btn {
+  color: #8a9ab8;
+  background: linear-gradient(145deg, #2a3148, #1f2538);
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.04),
+    inset -1px -1px 2px rgba(0,0,0,0.25),
+    6px 6px 14px rgba(0,0,0,0.35),
+    -4px -4px 10px rgba(255,255,255,0.02);
+}
+
+body.theme-dark .result-open-btn:hover {
+  background: linear-gradient(145deg, #323b56, #2a3148);
+}
+
+body.theme-dark .switch-track {
+  background: linear-gradient(145deg, #171b28, #1e2234);
+  box-shadow:
+    inset 3px 3px 7px rgba(0,0,0,0.5),
+    inset -3px -3px 7px rgba(255,255,255,0.04);
+}
+
+body.theme-dark .switch-thumb {
+  background: linear-gradient(145deg, #293050, #1e2540);
+  box-shadow:
+    3px 3px 7px rgba(0,0,0,0.5),
+    -2px -2px 5px rgba(255,255,255,0.04);
+  color: #d4aa30;
+}
+
+body.theme-dark .upload-font-btn {
+  background: linear-gradient(145deg, #2a3148, #1f2538);
+  color: #8aa8d8 !important;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.04),
+    inset -1px -1px 2px rgba(0,0,0,0.3),
+    3px 3px 8px rgba(0,0,0,0.35),
+    -2px -2px 6px rgba(255,255,255,0.02);
+}
+
+body.theme-dark .upload-font-btn:hover {
+  color: #6ea8ff !important;
+  box-shadow:
+    4px 4px 10px rgba(0,0,0,0.35),
+    -4px -4px 10px rgba(255,255,255,0.03);
+}
+
+body.theme-dark .upload-font-btn:active {
+  background: linear-gradient(145deg, #1f2538, #2a3148);
+  box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,0.45),
+    inset -2px -2px 5px rgba(255,255,255,0.03);
+}
+
+body.theme-dark .github-icon {
+  color: #8a9ab8;
+}
+
+body.theme-dark .font-delete-btn {
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.2),
+    inset -1px -1px 2px rgba(0,0,0,0.3),
+    3px 3px 8px rgba(0,0,0,0.35);
+}
+
+body.theme-dark #preview-canvas {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}

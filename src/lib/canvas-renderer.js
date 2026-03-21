@@ -1,7 +1,7 @@
 import { DAYS } from './utils.js';
 
 export class TimetableRenderer {
-  constructor(canvas, bgImage, courses, textColor, hPos, vPos, horizontalSizePercent, verticalSizePercent, courseNameFontSize = 20, courseRoomFontSize = 15, labelFontSize = 14, paletteColors) {
+  constructor(canvas, bgImage, courses, textColor, hPos, vPos, horizontalSizePercent, verticalSizePercent, courseNameFontSize = 20, courseRoomFontSize = 15, labelFontSize = 14, paletteColors, fontFamily = 'Cafe24 Surround') {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.bgImage = bgImage;
@@ -16,6 +16,7 @@ export class TimetableRenderer {
     this.labelFontSize = labelFontSize;
     // paletteColors는 필수
     this.colors = paletteColors;
+    this.fontFamily = fontFamily;
   }
 
   // 배경 이미지 위치 계산
@@ -172,7 +173,7 @@ export class TimetableRenderer {
   drawLabels(x, y, width, height, timeStart, timeEnd) {
     // 요일 레이블
     this.ctx.fillStyle = `rgb(${this.textColor[0]}, ${this.textColor[1]}, ${this.textColor[2]})`;
-    this.ctx.font = `bold ${this.labelFontSize}px Cafe24 Surround, sans-serif`;
+    this.ctx.font = `bold ${this.labelFontSize}px ${this.fontFamily}, sans-serif`;
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
 
@@ -183,7 +184,7 @@ export class TimetableRenderer {
     }
 
     // 시간 레이블
-    this.ctx.font = `${Math.max(10, this.labelFontSize - 2)}px Cafe24 Surround, sans-serif`;
+    this.ctx.font = `${Math.max(10, this.labelFontSize - 2)}px ${this.fontFamily}, sans-serif`;
     this.ctx.textAlign = 'right';
     this.ctx.textBaseline = 'middle';
 
@@ -309,10 +310,10 @@ export class TimetableRenderer {
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'top';
 
-    this.ctx.font = `bold ${this.courseNameFontSize}px Cafe24 Surround, sans-serif`;
+    this.ctx.font = `bold ${this.courseNameFontSize}px ${this.fontFamily}, sans-serif`;
     const wrappedNameLines = this.wrapTextInBox(this.ctx, course.name, textWidth, this.courseNameFontSize);
 
-    this.ctx.font = `${this.courseRoomFontSize}px Cafe24 Surround, sans-serif`;
+    this.ctx.font = `${this.courseRoomFontSize}px ${this.fontFamily}, sans-serif`;
     const wrappedRoomLines = this.wrapTextInBox(this.ctx, course.room || '', textWidth, this.courseRoomFontSize);
 
     let nameCount = Math.min(wrappedNameLines.length, 2);
@@ -340,7 +341,7 @@ export class TimetableRenderer {
     let currentY = y + padding + Math.max(0, (availableHeight - totalHeight) / 2);
 
     this.ctx.fillStyle = `rgb(${this.textColor[0]}, ${this.textColor[1]}, ${this.textColor[2]})`;
-    this.ctx.font = `bold ${this.courseNameFontSize}px Cafe24 Surround, sans-serif`;
+    this.ctx.font = `bold ${this.courseNameFontSize}px ${this.fontFamily}, sans-serif`;
     for (let i = 0; i < nameCount; i++) {
       this.ctx.fillText(wrappedNameLines[i], x + width / 2, currentY);
       currentY += nameLineHeight;
@@ -348,7 +349,7 @@ export class TimetableRenderer {
 
     if (roomCount > 0) {
       currentY += gap;
-      this.ctx.font = `${this.courseRoomFontSize}px Cafe24 Surround, sans-serif`;
+      this.ctx.font = `${this.courseRoomFontSize}px ${this.fontFamily}, sans-serif`;
       this.ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
       for (let i = 0; i < roomCount; i++) {
         this.ctx.fillText(wrappedRoomLines[i], x + width / 2, currentY);

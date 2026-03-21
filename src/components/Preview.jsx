@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TimetableRenderer } from '../lib/canvas-renderer';
 import { RESOLUTIONS } from '../lib/utils';
+import { ensureFontLoaded } from '../lib/font-storage';
 
 export default function Preview({
   bgImage,
@@ -18,7 +19,9 @@ export default function Preview({
   courseRoomFontSize,
   labelFontSize,
   paletteColors,
-  onShowToast
+  onShowToast,
+  fontFamily,
+  selectedFontId,
 }) {
   const [showResult, setShowResult] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -43,12 +46,7 @@ export default function Preview({
 
     try {
       try {
-        await document.fonts.load("16px 'Cafe24 Surround'");
-        const fontReadyPromise = document.fonts.ready;
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Font loading timeout')), 5000)
-        );
-        await Promise.race([fontReadyPromise, timeoutPromise]);
+        await ensureFontLoaded(selectedFontId);
       } catch (e) {
         console.warn('[font] loading warning:', e.message);
       }
@@ -86,7 +84,8 @@ export default function Preview({
         courseNameFontSize,
         courseRoomFontSize,
         labelFontSize,
-        paletteColors
+        paletteColors,
+        fontFamily
       );
 
       renderer.render();

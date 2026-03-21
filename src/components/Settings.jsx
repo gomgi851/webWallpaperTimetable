@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { RESOLUTIONS } from '../lib/utils';
+import { DEFAULT_FONT_ID, DEFAULT_FONT_NAME } from '../lib/font-storage';
 
 export default function Settings({
   bgFileName,
@@ -25,29 +26,89 @@ export default function Settings({
   courseRoomFontSize,
   onCourseRoomFontSizeChange,
   labelFontSize,
-  onLabelFontSizeChange
+  onLabelFontSizeChange,
+  customFonts,
+  selectedFontId,
+  onFontSelect,
+  onFontUpload,
+  onFontDelete,
 }) {
+  const fontInputRef = useRef(null);
+
+  const handleFontFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      onFontUpload(file);
+    }
+    e.target.value = '';
+  };
+
+  const isCustomFontSelected = selectedFontId !== DEFAULT_FONT_ID;
+
   return (
     <div className="card">
       <h3>1. 배경 및 설정</h3>
-      
-      {/* 1번 줄: 배경 선택 | 표 색상 */}
-      <div className="settings-row">
-        <div className="setting-item" style={{ flex: '2' }}>
-          <div className="upload-section">
-            <label className="upload-label">배경 선택</label>
-            <div className="upload-row">
-              <label htmlFor="bg-file-input" className="bg-file-label">choose file</label>
-              <input
-                id="bg-file-input"
-                type="file"
-                accept="image/*"
-                onChange={onBgImageChange}
-              />
-              <span className="file-name">{bgFileName}</span>
-            </div>
+
+      {/* 1번 줄: 배경 선택 | 시간표 폰트 | 표 색상 — 한 줄 */}
+      <div className="settings-row top-settings-row">
+        <div className="setting-item">
+          <label>배경 선택</label>
+          <div className="upload-row">
+            <label htmlFor="bg-file-input" className="bg-file-label">
+              {bgFileName ? '변경하기' : 'choose file'}
+            </label>
+            <input
+              id="bg-file-input"
+              type="file"
+              accept="image/*"
+              onChange={onBgImageChange}
+            />
+            {bgFileName && (
+              <span className="file-applied">✓ 적용됨</span>
+            )}
           </div>
         </div>
+
+        <div className="setting-item font-row-item">
+          <label>시간표 폰트</label>
+          <div className="font-select-row">
+            <select
+              value={selectedFontId}
+              onChange={(e) => onFontSelect(e.target.value)}
+              className="font-select"
+            >
+              <option value={DEFAULT_FONT_ID}>{DEFAULT_FONT_NAME}</option>
+              {customFonts.map((f) => (
+                <option key={f.id} value={f.id}>{f.name}</option>
+              ))}
+            </select>
+            {/* 항상 렌더링 — visibility로 공간 유지, UPLOAD FONT 위치 고정 */}
+            <button
+              className={`font-delete-btn${isCustomFontSelected ? '' : ' font-delete-btn--hidden'}`}
+              onClick={() => isCustomFontSelected && onFontDelete(selectedFontId)}
+              tabIndex={isCustomFontSelected ? 0 : -1}
+              title="선택된 폰트 삭제"
+              aria-label="선택된 폰트 삭제"
+            >
+              ×
+            </button>
+            <label
+              htmlFor="font-file-input"
+              className="upload-font-btn"
+              title=".ttf .otf .woff .woff2 · 5MB"
+            >
+              upload font
+            </label>
+            <input
+              id="font-file-input"
+              ref={fontInputRef}
+              type="file"
+              accept=".ttf,.otf,.woff,.woff2"
+              onChange={handleFontFileChange}
+            />
+          </div>
+        </div>
+
         <div className="setting-item color-setting-item">
           <label>표 색상</label>
           <div className="color-button-group">
@@ -67,7 +128,7 @@ export default function Settings({
         </div>
       </div>
 
-      {/* 2번 줄: 화질 | 강의명 글씨 크기 | 강의실 글씨 크기 | 요일/시간 글씨 크기 */}
+      {/* 3번 줄: 화질 | 강의명 글씨 크기 | 강의실 글씨 크기 | 요일/시간 글씨 크기 */}
       <div className="settings-row">
         <div className="setting-item">
           <label>화질</label>
@@ -111,7 +172,7 @@ export default function Settings({
         </div>
       </div>
 
-      {/* 3번 줄: 가로 위치 | 세로 위치 | 가로 크기 | 세로 크기 */}
+      {/* 4번 줄: 가로 위치 | 세로 위치 | 가로 크기 | 세로 크기 */}
       <div className="settings-row">
         <div className="setting-item">
           <label>가로 위치</label>
