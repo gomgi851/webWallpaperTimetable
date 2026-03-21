@@ -7,6 +7,7 @@ export const MINUTES = Array.from({ length: 12 }, (_, i) => String(i * 5).padSta
 export const RESOLUTIONS = {
   fhd: { width: 1920, height: 1080 },
   qhd: { width: 2560, height: 1440 },
+  uhd: { width: 3840, height: 2160 },
   original: { width: null, height: null } // 배경화면 원본 크기 (동적 결정)
 };
 
