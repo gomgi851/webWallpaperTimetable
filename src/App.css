@@ -9,14 +9,17 @@
   font-display: swap;
 }
 
+:root {
+  --font-ui: 'Pretendard', sans-serif;
+  --font-display: 'Do Hyeon', sans-serif;
+}
+
 * {
   box-sizing: border-box;
   color: #1a1a1a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  -webkit-appearance: none;
-  appearance: none;
 }
 
 body {
@@ -24,8 +27,19 @@ body {
   padding: 10px 4px;
   background: linear-gradient(145deg, #f0f2f5, #e2e6ee);
   overflow-y: scroll;
-  font-family: 'Pretendard', sans-serif;
+  font-family: var(--font-ui);
   min-height: 100vh;
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .container {
@@ -50,7 +64,7 @@ body {
 }
 
 h1 {
-  font-family: 'Do Hyeon', sans-serif !important;
+  font-family: var(--font-display) !important;
   font-weight: 600;
   text-align: left;
   margin-top: 3px;
@@ -64,7 +78,7 @@ h1 {
 h3 {
   color: #4b5563;
   letter-spacing: 0.3px;
-  font-family: 'Do Hyeon', sans-serif !important;
+  font-family: var(--font-display) !important;
   font-weight: 600;
   font-size: 1.35rem;
   margin-top: 0;
@@ -73,14 +87,16 @@ h3 {
 }
 
 .card {
-  background: linear-gradient(145deg, #f8f9fc, #e6e9f0);
+  background: linear-gradient(145deg, #f3f6fb, #e7ecf4);
   padding: 20px 10px;
   border-radius: 16px;
   box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.7),
+    inset -1px -1px 2px rgba(0,0,0,0.04),
     8px 8px 20px rgba(0,0,0,0.08),
     -8px -8px 20px rgba(255,255,255,0.9);
   margin-bottom: 12px;
-  border: none;
+  border: 1px solid #dde3ee;
   width: 100%;
 }
 
@@ -218,6 +234,8 @@ h3 {
 /* input[type="number"] - 항상 spinner 표시 */
 .setting-item input[type="number"] {
   -webkit-appearance: auto;
+  -moz-appearance: auto;
+  appearance: auto;
 }
 
 .setting-item input[type="number"]::-webkit-outer-spin-button,
@@ -468,7 +486,7 @@ button {
    생성 버튼 (Primary)
 ========================= */
 .generate-btn {
-  font-family: 'Do Hyeon', sans-serif !important;
+  font-family: var(--font-display) !important;
   width: 236px;
   min-height: 48px;
   padding: 12px 22px;
@@ -533,7 +551,7 @@ button {
    결과 버튼 공통
 ========================= */
 .result-action-btn {
-  font-family: 'Do Hyeon', sans-serif !important;
+  font-family: var(--font-display) !important;
   display: inline-block;
   padding: 12px 24px;
   font-size: 1rem;
@@ -829,13 +847,14 @@ button {
 
   /* 모바일 입력 방식 */
   .time-input-mobile {
-    display: inline-block !important;
+    display: inline-flex !important;
     visibility: visible !important;
-    width: 25px;
-    padding: 2px 4px;
+    width: calc((100% - 26px) / 2);
+    min-width: 0;
+    flex: 1 1 0;
+    padding: 0 8px;
     font-size: 0.75rem;
-    text-align: center;
-    height: 30px;
+    height: 34px;
   }
 
   .time-input-desktop {
@@ -860,6 +879,15 @@ button {
   .time-inputs span {
     font-size: 0.7rem;
     flex: 0 0 8px;
+    text-align: center;
+  }
+
+  .time-inputs .time-input-mobile-text {
+    font-size: 0.85rem !important;
+    font-weight: 400 !important;
+    color: #1a1a1a !important;
+    flex: 1 1 auto;
+    line-height: 30px;
     text-align: center;
   }
 
@@ -947,10 +975,12 @@ button {
   }
 
   .time-input-mobile {
-    width: 23px;
-    padding: 2px 3px;
+    width: calc((100% - 24px) / 2);
+    min-width: 0;
+    flex: 1 1 0;
+    padding: 2px 6px;
     font-size: 0.7rem;
-    height: 28px;
+    height: 32px;
   }
 
   .time-dash-mobile {
@@ -988,10 +1018,12 @@ button {
   }
 
   .time-input-mobile {
-    width: 20px;
-    padding: 1px 2px;
+    width: calc((100% - 20px) / 2);
+    min-width: 0;
+    flex: 1 1 0;
+    padding: 1px 5px;
     font-size: 0.65rem;
-    height: 26px;
+    height: 30px;
   }
 
   .time-dash-mobile {
@@ -1039,10 +1071,12 @@ button {
   }
 
   .time-input-mobile {
-    width: 15px;
-    padding: 2px 3px;
+    width: calc((100% - 12px) / 2);
+    min-width: 0;
+    flex: 1 1 0;
+    padding: 1px 4px;
     font-size: 0.65rem;
-    height: 26px;
+    height: 28px;
   }
 
   .time-dash-mobile {
@@ -1347,15 +1381,16 @@ button {
 }
 
 .course-card {
-  background: linear-gradient(145deg, #f9fafc, #f0f3f8);
+  background: linear-gradient(145deg, #fbfcff, #f2f5fb);
   border-radius: 12px;
   margin-bottom: 15px;
   overflow: hidden;
+  border: 1px solid #d8e0eb;
   box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.8),
-    inset -1px -1px 2px rgba(0,0,0,0.05),
-    5px 5px 12px rgba(0,0,0,0.08),
-    -3px -3px 8px rgba(255,255,255,0.9);
+    inset 1px 1px 2px rgba(255,255,255,0.9),
+    inset -1px -1px 2px rgba(0,0,0,0.03),
+    5px 5px 12px rgba(32,58,110,0.09),
+    -3px -3px 8px rgba(255,255,255,0.95);
 }
 
 .course-header {
@@ -1365,11 +1400,12 @@ button {
   padding: 16px 18px;
   cursor: pointer;
   user-select: none;
+  background: linear-gradient(145deg, #f8fafd, #f1f4fa);
   transition: all 0.2s ease;
 }
 
 .course-header:hover {
-  background: linear-gradient(145deg, #ffffff, #f5f8fc);
+  background: linear-gradient(145deg, #fcfdff, #eef2f8);
 }
 
 .course-header-content {
@@ -1452,8 +1488,8 @@ button {
 
 .course-times {
   padding: 8px 8px;
-  background: rgba(255,255,255,0.6);
-  border-top: 1px solid rgba(0,0,0,0.05);
+  background: rgba(247, 250, 255, 0.9);
+  border-top: 1px solid rgba(63, 98, 163, 0.12);
   animation: slideDown 0.2s ease;
 }
 
@@ -1547,6 +1583,42 @@ button {
   box-sizing: border-box;
 }
 
+.time-input-mobile {
+  display: none;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.time-input-mobile-text {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  font-size: inherit;
+  font-weight: 400;
+  color: inherit;
+}
+
+.time-input-mobile-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+select.time-input-desktop {
+  background-image: url('/arrow.png');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px 16px;
+  padding-right: 28px;
+}
+
 /* 기본값: 데스크톱 표시, 모바일 숨김 */
 @media (min-width: 721px) {
   .time-input-desktop {
@@ -1563,6 +1635,8 @@ button {
 /* .time-input은 항상 spinner 표시 */
 input[type="number"].time-input {
   -webkit-appearance: auto;
+  -moz-appearance: auto;
+  appearance: auto;
 }
 
 input[type="number"].time-input::-webkit-outer-spin-button,
@@ -1572,6 +1646,14 @@ input[type="number"].time-input::-webkit-inner-spin-button {
 }
 
 .time-input:focus {
+  outline: none;
+  border-color: #2f6fd6;
+  box-shadow:
+    inset 3px 3px 6px rgba(0,0,0,0.12),
+    inset -3px -3px 6px rgba(255,255,255,0.8);
+}
+
+.time-input-mobile:focus-within {
   outline: none;
   border-color: #2f6fd6;
   box-shadow:
@@ -1619,8 +1701,8 @@ input[type="number"].time-input::-webkit-inner-spin-button {
   padding: 10px 16px;
   border: 2px dashed #d0dce6;
   border-radius: 8px;
-  background: rgba(79, 172, 254, 0.05);
-  color: #2563eb;
+  background: rgba(79, 172, 254, 0.04);
+  color: #4f6fa3;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -1628,42 +1710,42 @@ input[type="number"].time-input::-webkit-inner-spin-button {
 }
 
 .add-time-btn:hover {
-  border-color: #2563eb;
-  background: rgba(79, 172, 254, 0.1);
-  color: #1d4ed8;
+  border-color: #9eb2d1;
+  background: rgba(79, 172, 254, 0.07);
+  color: #3f5f8e;
 }
 
 .add-course-btn {
   width: 100%;
   padding: 14px 16px;
-  border: 2px solid #4facfe;
+  border: 1px solid #d6dbe6;
   border-radius: 10px;
-  background: linear-gradient(145deg, #e0f2fe, #bae6fd);
-  color: #0369a1;
+  background: linear-gradient(145deg, #f2f4f8, #dcdfe6);
+  color: #5b6b8c;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow:
     inset 1px 1px 2px rgba(255,255,255,0.8),
-    inset -1px -1px 2px rgba(0,0,0,0.05);
+    inset -1px -1px 2px rgba(0,0,0,0.05),
+    4px 4px 10px rgba(0,0,0,0.08),
+    -3px -3px 8px rgba(255,255,255,0.85);
 }
 
 .add-course-btn:hover {
-  background: linear-gradient(145deg, #bae6fd, #7dd3fc);
-  color: #0c4a6e;
+  background: linear-gradient(145deg, #f7f9fc, #e2e6ee);
+  color: #2f6fd6;
   transform: translateY(-2px);
   box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.8),
-    inset -1px -1px 2px rgba(0,0,0,0.05),
     6px 6px 12px rgba(0,0,0,0.1),
-    -4px -4px 8px rgba(255,255,255,0.9);
+    -4px -4px 10px rgba(255,255,255,0.9);
 }
 
 .add-course-btn:active {
   transform: translateY(0);
+  background: linear-gradient(145deg, #dcdfe6, #f2f4f8);
   box-shadow:
-    inset 2px 2px 4px rgba(0,0,0,0.1),
-    inset -2px -2px 4px rgba(255,255,255,0.3);
+    inset 2px 2px 5px rgba(0,0,0,0.12),
+    inset -2px -2px 5px rgba(255,255,255,0.6);
 }
-

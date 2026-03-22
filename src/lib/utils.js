@@ -1,6 +1,6 @@
 // 날짜 관련 유틸리티
 export const DAYS = ['월', '화', '수', '목', '금'];
-export const HOURS = Array.from({ length: 16 }, (_, i) => String(i + 7).padStart(2, '0'));
+export const HOURS = Array.from({ length: 18 }, (_, i) => String(i + 7).padStart(2, '0'));
 export const MINUTES = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, '0'));
 
 // 해상도 설정

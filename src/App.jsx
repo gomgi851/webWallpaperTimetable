@@ -30,7 +30,7 @@ export default function App() {
           startH: '10',
           startM: '00',
           endH: '11',
-          endM: '30'
+          endM: '00'
         }
       ]
     },
@@ -45,7 +45,7 @@ export default function App() {
           startH: '13',
           startM: '00',
           endH: '14',
-          endM: '30'
+          endM: '00'
         }
       ]
     },
@@ -60,7 +60,7 @@ export default function App() {
           startH: '10',
           startM: '00',
           endH: '11',
-          endM: '30'
+          endM: '00'
         }
       ]
     },
@@ -75,7 +75,7 @@ export default function App() {
           startH: '14',
           startM: '00',
           endH: '15',
-          endM: '30'
+          endM: '00'
         }
       ]
     }

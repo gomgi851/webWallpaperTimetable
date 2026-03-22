@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { DAYS, HOURS, MINUTES } from '../lib/utils';
 
 export default function ScheduleInput({
@@ -11,6 +11,12 @@ export default function ScheduleInput({
   onDeleteTime
 }) {
   const [expandedClassId, setExpandedClassId] = useState(classes[0]?.id || null);
+  const snapMinuteToFive = (minuteText) => {
+    const minute = Number.parseInt(minuteText, 10);
+    if (Number.isNaN(minute)) return '00';
+    const snapped = Math.max(0, Math.min(55, Math.floor(minute / 5) * 5));
+    return String(snapped).padStart(2, '0');
+  };
 
   return (
     <div className="card schedule-input-pc">
@@ -49,7 +55,7 @@ export default function ScheduleInput({
               </div>
               <div className="course-actions">
                 <span className="expand-icon">
-                  {expandedClassId === course.id ? '▼' : '▶'}
+                  {expandedClassId === course.id ? '▲' : '▼'}
                 </span>
                 <button
                   className="delete-btn"
@@ -85,79 +91,105 @@ export default function ScheduleInput({
                     <span className="time-separator">|</span>
 
                     <div className="time-inputs">
-                      {/* 모바일: 통합 입력 (HH:MM-HH:MM) */}
-                      <input
-                        type="text"
-                        className="time-input time-input-mobile"
-                        placeholder="시간"
-                        value={`${time.startH}:${time.startM}`}
-                        onChange={(e) => {
-                          const [h, m] = e.target.value.split(':');
-                          if (h) onUpdateTime(course.id, time.id, 'startH', h.padStart(2, '0'));
-                          if (m) onUpdateTime(course.id, time.id, 'startM', m.padStart(2, '0'));
-                        }}
-                      />
+                      {/* 모바일: 네이티브 time picker */}
+                      <label className="time-input time-input-mobile">
+                        <span className="time-input-mobile-text">{`${time.startH}:${time.startM}`}</span>
+                        <input
+                          type="time"
+                          lang="en-GB"
+                          className="time-input-mobile-native"
+                          value={`${time.startH}:${time.startM}`}
+                          min="07:00"
+                          max="23:55"
+                          step="300"
+                          onChange={(e) => {
+                            const [h, m] = e.target.value.split(':');
+                            if (h) onUpdateTime(course.id, time.id, 'startH', h.padStart(2, '0'));
+                            if (typeof m !== 'undefined') {
+                              onUpdateTime(course.id, time.id, 'startM', snapMinuteToFive(m));
+                            }
+                          }}
+                        />
+                      </label>
                       <span className="time-dash-mobile"> ~ </span>
-                      <input
-                        type="text"
-                        className="time-input time-input-mobile"
-                        placeholder="시간"
-                        value={`${time.endH}:${time.endM}`}
-                        onChange={(e) => {
-                          const [h, m] = e.target.value.split(':');
-                          if (h) onUpdateTime(course.id, time.id, 'endH', h.padStart(2, '0'));
-                          if (m) onUpdateTime(course.id, time.id, 'endM', m.padStart(2, '0'));
-                        }}
-                      />
+                      <label className="time-input time-input-mobile">
+                        <span className="time-input-mobile-text">{`${time.endH}:${time.endM}`}</span>
+                        <input
+                          type="time"
+                          lang="en-GB"
+                          className="time-input-mobile-native"
+                          value={`${time.endH}:${time.endM}`}
+                          min="07:00"
+                          max="23:55"
+                          step="300"
+                          onChange={(e) => {
+                            const [h, m] = e.target.value.split(':');
+                            if (h) onUpdateTime(course.id, time.id, 'endH', h.padStart(2, '0'));
+                            if (typeof m !== 'undefined') {
+                              onUpdateTime(course.id, time.id, 'endM', snapMinuteToFive(m));
+                            }
+                          }}
+                        />
+                      </label>
 
                       {/* 데스크톱: 분리 입력 */}
-                      <input
-                        type="number"
+                      <select
                         className="time-input time-input-desktop"
-                        min="7"
-                        max="22"
-                        value={parseInt(time.startH)}
+                        value={time.startH}
                         onChange={(e) =>
-                          onUpdateTime(course.id, time.id, 'startH', String(e.target.value).padStart(2, '0'))
+                          onUpdateTime(course.id, time.id, 'startH', e.target.value)
                         }
-                      />
+                      >
+                        {HOURS.map((hour) => (
+                          <option key={`start-h-${hour}`} value={hour}>
+                            {hour}
+                          </option>
+                        ))}
+                      </select>
                       <span className="time-separator time-separator-desktop">:</span>
-                      <input
-                        type="number"
+                      <select
                         className="time-input time-input-desktop"
-                        min="0"
-                        max="55"
-                        step="5"
-                        value={parseInt(time.startM)}
+                        value={time.startM}
                         onChange={(e) =>
-                          onUpdateTime(course.id, time.id, 'startM', String(e.target.value).padStart(2, '0'))
+                          onUpdateTime(course.id, time.id, 'startM', e.target.value)
                         }
-                      />
+                      >
+                        {MINUTES.map((minute) => (
+                          <option key={`start-m-${minute}`} value={minute}>
+                            {minute}
+                          </option>
+                        ))}
+                      </select>
 
                       <span className="time-dash time-dash-desktop"> - </span>
 
-                      <input
-                        type="number"
+                      <select
                         className="time-input time-input-desktop"
-                        min="7"
-                        max="22"
-                        value={parseInt(time.endH)}
+                        value={time.endH}
                         onChange={(e) =>
-                          onUpdateTime(course.id, time.id, 'endH', String(e.target.value).padStart(2, '0'))
+                          onUpdateTime(course.id, time.id, 'endH', e.target.value)
                         }
-                      />
+                      >
+                        {HOURS.map((hour) => (
+                          <option key={`end-h-${hour}`} value={hour}>
+                            {hour}
+                          </option>
+                        ))}
+                      </select>
                       <span className="time-separator time-separator-desktop">:</span>
-                      <input
-                        type="number"
+                      <select
                         className="time-input time-input-desktop"
-                        min="0"
-                        max="55"
-                        step="5"
-                        value={parseInt(time.endM)}
+                        value={time.endM}
                         onChange={(e) =>
-                          onUpdateTime(course.id, time.id, 'endM', String(e.target.value).padStart(2, '0'))
+                          onUpdateTime(course.id, time.id, 'endM', e.target.value)
                         }
-                      />
+                      >
+                        {MINUTES.map((minute) => (
+                          <option key={`end-m-${minute}`} value={minute}>
+                            {minute}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <button
@@ -188,3 +220,4 @@ export default function ScheduleInput({
     </div>
   );
 }
+
