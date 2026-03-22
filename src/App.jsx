@@ -218,7 +218,7 @@ export default function App() {
   ]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+    showToast('현재 구현되지 않은 기능입니다.', 'info');
   };
 
   const handleFontUpload = async (file) => {

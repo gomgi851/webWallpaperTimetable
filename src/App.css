@@ -21,7 +21,7 @@
 
 body {
   margin: 0;
-  padding: 14px 20px;
+  padding: 10px 4px;
   background: linear-gradient(145deg, #f0f2f5, #e2e6ee);
   overflow-y: scroll;
   font-family: 'Pretendard', sans-serif;
@@ -74,7 +74,7 @@ h3 {
 
 .card {
   background: linear-gradient(145deg, #f8f9fc, #e6e9f0);
-  padding: 22px 24px;
+  padding: 20px 10px;
   border-radius: 16px;
   box-shadow:
     8px 8px 20px rgba(0,0,0,0.08),
@@ -207,7 +207,6 @@ h3 {
   border-radius: 6px;
   font-size: 0.85rem;
   font-family: 'Pretendard', sans-serif;
-  font-size: 0.875rem;
 
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -302,7 +301,7 @@ h3 {
 
   border: 1px solid #e8e8e8;
   border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-family: 'Pretendard', sans-serif;
 }
 
@@ -830,29 +829,32 @@ button {
 
   /* 모바일 입력 방식 */
   .time-input-mobile {
-    display: inline-block;
-    width: 42px;
-    padding: 4px 6px;
-    font-size: 0.8rem;
+    display: inline-block !important;
+    visibility: visible !important;
+    width: 25px;
+    padding: 2px 4px;
+    font-size: 0.75rem;
     text-align: center;
+    height: 30px;
   }
 
   .time-input-desktop {
-    display: none;
+    display: none !important;
+    visibility: hidden !important;
   }
 
   .time-separator-desktop {
-    display: none;
+    display: none !important;
   }
 
   .time-dash-desktop {
-    display: none;
+    display: none !important;
   }
 
   .time-dash-mobile {
     display: inline-block;
-    margin: 0 4px;
-    font-size: 0.8rem;
+    margin: 0 2px;
+    font-size: 0.75rem;
   }
 
   .time-inputs span {
@@ -862,36 +864,39 @@ button {
   }
 
   .time-row {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 6px;
     padding: 10px 8px;
+    overflow-x: auto;
   }
 
   .delete-time-btn {
-    width: 24px;
-    height: 24px;
-    font-size: 12px;
+    width: 32px;
+    height: 30px;
+    font-size: 14px;
     flex-shrink: 0;
   }
 
   .day-select {
-    width: 50px;
-    padding: 0 6px;
+    width: 28px;
+    padding: 0 3px;
     line-height: 30px;
     height: 32px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 
   .course-name-input {
     flex: 0 1 120px;
     padding: 6px 8px;
-    font-size: 13px;
+    font-size: 0.85rem;
+    font-family: 'Pretendard', sans-serif;
   }
 
   .course-room-input {
     flex: 0 1 80px;
     padding: 6px 8px;
-    font-size: 13px;
+    font-size: 0.85rem;
+    font-family: 'Pretendard', sans-serif;
   }
 
   .course-header {
@@ -929,76 +934,112 @@ button {
   .generate-btn {
     width: 100%;
   }
+
 }
 
 /* 600px 이하 더 작은 모바일 */
 @media (max-width: 600px) {
+  .time-input {
+    width: 50px;
+    height: 32px;
+    font-size: 0.7rem;
+    padding: 2px 3px;
+  }
+
   .time-input-mobile {
-    width: 37px;
-    padding: 3px 5px;
-    font-size: 0.75rem;
-  }
-
-  .time-dash-mobile {
-    margin: 0 3px;
-    font-size: 0.75rem;
-  }
-
-  .course-name-input {
-    flex: 0 1 100px;
-  }
-
-  .course-room-input {
-    flex: 0 1 70px;
-  }
-
-  .day-select {
-    width: 45px;
-  }
-}
-
-/* 480px 이하 초소형 모바일 */
-@media (max-width: 480px) {
-  .time-input-mobile {
-    width: 32px;
-    padding: 2px 4px;
+    width: 23px;
+    padding: 2px 3px;
     font-size: 0.7rem;
     height: 28px;
   }
 
   .time-dash-mobile {
-    margin: 0 2px;
+    margin: 0 1px;
     font-size: 0.7rem;
   }
 
+  .course-name-input {
+    flex: 0 1 100px;
+    font-size: 0.85rem;
+    font-family: 'Pretendard', sans-serif;
+  }
+
+  .course-room-input {
+    flex: 0 1 70px;
+    font-size: 0.85rem;
+    font-family: 'Pretendard', sans-serif;
+  }
+
+  .day-select {
+    width: 26px;
+    padding: 0 2px;
+    font-size: 0.7rem;
+  }
+
+}
+
+/* 480px 이하 초소형 모바일 */
+@media (max-width: 480px) {
+  .time-input {
+    width: 40px;
+    height: 30px;
+    font-size: 0.65rem;
+    padding: 1px 2px;
+  }
+
+  .time-input-mobile {
+    width: 20px;
+    padding: 1px 2px;
+    font-size: 0.65rem;
+    height: 26px;
+  }
+
+  .time-dash-mobile {
+    margin: 0 1px;
+    font-size: 0.65rem;
+  }
+
   .time-inputs {
-    gap: 5px;
+    gap: 3px;
   }
 
   .course-name-input {
     flex: 0 1 90px;
+    font-size: 0.85rem;
+    font-family: 'Pretendard', sans-serif;
   }
 
   .course-room-input {
     flex: 0 1 60px;
+    font-size: 0.85rem;
+    font-family: 'Pretendard', sans-serif;
   }
 
   .day-select {
-    width: 40px;
-    font-size: 0.7rem;
+    width: 22px;
+    padding: 0 2px;
+    font-size: 0.6rem;
   }
 
   .delete-time-btn {
-    width: 22px;
-    height: 22px;
-    font-size: 10px;
+    width: 28px;
+    height: 26px;
+    font-size: 12px;
   }
+
 }
 
 /* 360px 이하 극소형 모바일 */
 @media (max-width: 360px) {
+  .time-input {
+    width: 30px;
+    height: 28px;
+    font-size: 0.6rem;
+    padding: 1px 2px;
+  }
+
   .time-input-mobile {
-    width: 28px;
+    width: 15px;
     padding: 2px 3px;
     font-size: 0.65rem;
     height: 26px;
@@ -1015,19 +1056,21 @@ button {
   .course-name-input {
     flex: 0 1 80px;
     padding: 4px 6px;
-    font-size: 12px;
+    font-size: 0.85rem;
+    font-family: 'Pretendard', sans-serif;
   }
 
   .course-room-input {
     flex: 0 1 50px;
     padding: 4px 6px;
-    font-size: 12px;
+    font-size: 0.85rem;
+    font-family: 'Pretendard', sans-serif;
   }
 
   .day-select {
-    width: 35px;
-    padding: 0 4px;
-    font-size: 0.65rem;
+    width: 18px;
+    padding: 0 1px;
+    font-size: 0.55rem;
   }
 
   .delete-time-btn {
@@ -1046,6 +1089,7 @@ button {
     padding: 10px 8px;
     gap: 6px;
   }
+
 }
 
 /* =========================
@@ -1076,7 +1120,7 @@ button {
   padding: 4px 28px 4px 8px;
   border: 1px solid #e8e8e8;
   border-radius: 6px;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-family: 'Pretendard', sans-serif;
   -webkit-appearance: none;
   appearance: none;
@@ -1291,301 +1335,13 @@ button {
   justify-content: flex-start;
 }
 
-/* 다크모드 숫자 스핀 버튼 — SVG 화살표 이미지로 교체 */
-body.theme-dark input[type="number"]::-webkit-inner-spin-button,
-body.theme-dark input[type="number"]::-webkit-outer-spin-button {
-  opacity: 1;
-  filter: invert(0.7) brightness(1.4);
-  cursor: pointer;
-}
-
 /* GitHub 아이콘 */
 .github-icon {
   color: #1a1a1a;
   display: block;
 }
 
-/* =========================
-   다크모드 전체 오버라이드
-========================= */
-body.theme-dark {
-  background: linear-gradient(145deg, #1a1d24, #131620);
-  color: #c8cfe0;
-}
 
-body.theme-dark * {
-  color: inherit;
-}
-
-body.theme-dark h1 {
-  color: #e4e8f4 !important;
-}
-
-body.theme-dark h3 {
-  color: #8fa0c2;
-}
-
-body.theme-dark .card {
-  background: linear-gradient(145deg, #232838, #1b1f2c);
-  box-shadow:
-    8px 8px 20px rgba(0,0,0,0.45),
-    -8px -8px 20px rgba(255,255,255,0.03);
-}
-
-body.theme-dark .setting-item label {
-  color: #7a8aaa;
-}
-
-body.theme-dark .bg-file-label {
-  background: linear-gradient(145deg, #2a3148, #1f2538);
-  color: #8aa8d8 !important;
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.05),
-    inset -1px -1px 2px rgba(0,0,0,0.35),
-    3px 3px 8px rgba(0,0,0,0.35),
-    -2px -2px 6px rgba(255,255,255,0.02);
-}
-
-body.theme-dark .bg-file-label:hover {
-  color: #6ea8ff !important;
-  box-shadow:
-    4px 4px 10px rgba(0,0,0,0.35),
-    -4px -4px 10px rgba(255,255,255,0.03);
-}
-
-body.theme-dark .bg-file-label:active {
-  background: linear-gradient(145deg, #1f2538, #2a3148);
-  box-shadow:
-    inset 2px 2px 5px rgba(0,0,0,0.45),
-    inset -2px -2px 5px rgba(255,255,255,0.04);
-}
-
-body.theme-dark .file-applied {
-  color: #66bb6a;
-}
-
-body.theme-dark .setting-item select,
-body.theme-dark .setting-item input[type="number"],
-body.theme-dark .font-select {
-  background-color: #1c2032;
-  color: #b8c2de;
-  border-color: #363c54;
-}
-
-/* 셀렉트만 커스텀 화살표 적용 — number input에는 절대 적용 안 함 */
-body.theme-dark .setting-item select,
-body.theme-dark .font-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%237a8aaa' d='M8 10L3 5h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 16px 16px;
-}
-
-body.theme-dark .setting-item input[type="number"] {
-  background-image: none;
-  -webkit-appearance: auto;
-}
-
-body.theme-dark .setting-item input[type="number"]::-webkit-outer-spin-button,
-body.theme-dark .setting-item input[type="number"]::-webkit-inner-spin-button {
-  opacity: 1;
-  display: inline-block;
-}
-
-body.theme-dark .setting-item select:focus,
-body.theme-dark .setting-item input:focus,
-body.theme-dark .font-select:focus {
-  border-color: #4a7acf;
-  box-shadow:
-    inset 3px 3px 6px rgba(0,0,0,0.3),
-    inset -3px -3px 6px rgba(255,255,255,0.03);
-}
-
-body.theme-dark .color-button.selected {
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
-}
-
-body.theme-dark .header-row {
-  border-bottom-color: #2e3450;
-}
-
-body.theme-dark .header-row div {
-  color: #4a5470;
-}
-
-body.theme-dark .name-break-hint {
-  color: #4a5470;
-}
-
-body.theme-dark .row {
-  border-bottom-color: rgba(200,210,240,0.08);
-}
-
-body.theme-dark .row select,
-body.theme-dark .row input {
-  background-color: #1c2032;
-  color: #b8c2de;
-  border-color: #363c54;
-}
-
-/* 수업 입력 영역: 셀렉트만 화살표, 텍스트/숫자 input은 배경이미지 없음 */
-body.theme-dark .row select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%237a8aaa' d='M8 10L3 5h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 16px 16px;
-}
-
-body.theme-dark .row input {
-  background-image: none;
-}
-
-body.theme-dark .time-inputs span {
-  color: #4a5470;
-}
-
-body.theme-dark .add-btn {
-  background: linear-gradient(145deg, #2a3148, #1f2538);
-  color: #7a8aaa;
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.04),
-    inset -1px -1px 2px rgba(0,0,0,0.25);
-}
-
-body.theme-dark .add-btn:hover {
-  color: #6ea8ff;
-  box-shadow:
-    4px 4px 10px rgba(0,0,0,0.35),
-    -4px -4px 10px rgba(255,255,255,0.03);
-}
-
-body.theme-dark .add-btn:active {
-  background: linear-gradient(145deg, #1f2538, #2a3148);
-  box-shadow:
-    inset 2px 2px 5px rgba(0,0,0,0.4),
-    inset -2px -2px 5px rgba(255,255,255,0.03);
-}
-
-body.theme-dark .generate-btn {
-  color: #eaf2ff;
-  background: linear-gradient(145deg, #4f85e8, #2a57b4);
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.16),
-    inset -1px -1px 2px rgba(0,0,0,0.22),
-    8px 8px 18px rgba(0,0,0,0.42),
-    -6px -6px 14px rgba(255,255,255,0.03);
-}
-
-body.theme-dark .generate-btn:hover:not(:disabled) {
-  background: linear-gradient(145deg, #5c93f4, #3566c8);
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.2),
-    inset -1px -1px 2px rgba(0,0,0,0.24),
-    10px 10px 22px rgba(0,0,0,0.46),
-    -8px -8px 16px rgba(255,255,255,0.04);
-}
-
-body.theme-dark .generate-btn:active:not(:disabled) {
-  background: linear-gradient(145deg, #2a57b4, #4f85e8);
-  box-shadow:
-    inset 3px 3px 6px rgba(0,0,0,0.35),
-    inset -3px -3px 6px rgba(255,255,255,0.08);
-}
-
-body.theme-dark .generate-btn:disabled,
-body.theme-dark .generate-btn.is-busy {
-  color: #4a5470;
-  background: linear-gradient(145deg, #252a3a, #1c2030);
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.03),
-    inset -1px -1px 2px rgba(0,0,0,0.25),
-    5px 5px 10px rgba(0,0,0,0.3),
-    -4px -4px 8px rgba(255,255,255,0.02);
-}
-
-body.theme-dark .result-save-btn {
-  color: #6ea8ff;
-  background: linear-gradient(145deg, #1e2a44, #18213a);
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.04),
-    inset -1px -1px 2px rgba(0,0,0,0.3),
-    6px 6px 14px rgba(0,0,0,0.35),
-    -4px -4px 10px rgba(255,255,255,0.02);
-}
-
-body.theme-dark .result-save-btn:hover {
-  background: linear-gradient(145deg, #263556, #1e2a44);
-}
-
-body.theme-dark .result-open-btn {
-  color: #8a9ab8;
-  background: linear-gradient(145deg, #2a3148, #1f2538);
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.04),
-    inset -1px -1px 2px rgba(0,0,0,0.25),
-    6px 6px 14px rgba(0,0,0,0.35),
-    -4px -4px 10px rgba(255,255,255,0.02);
-}
-
-body.theme-dark .result-open-btn:hover {
-  background: linear-gradient(145deg, #323b56, #2a3148);
-}
-
-body.theme-dark .switch-track {
-  background: linear-gradient(145deg, #171b28, #1e2234);
-  box-shadow:
-    inset 3px 3px 7px rgba(0,0,0,0.5),
-    inset -3px -3px 7px rgba(255,255,255,0.04);
-}
-
-body.theme-dark .switch-thumb {
-  background: linear-gradient(145deg, #293050, #1e2540);
-  box-shadow:
-    3px 3px 7px rgba(0,0,0,0.5),
-    -2px -2px 5px rgba(255,255,255,0.04);
-  color: #d4aa30;
-}
-
-body.theme-dark .upload-font-btn {
-  background: linear-gradient(145deg, #2a3148, #1f2538);
-  color: #8aa8d8 !important;
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.04),
-    inset -1px -1px 2px rgba(0,0,0,0.3),
-    3px 3px 8px rgba(0,0,0,0.35),
-    -2px -2px 6px rgba(255,255,255,0.02);
-}
-
-body.theme-dark .upload-font-btn:hover {
-  color: #6ea8ff !important;
-  box-shadow:
-    4px 4px 10px rgba(0,0,0,0.35),
-    -4px -4px 10px rgba(255,255,255,0.03);
-}
-
-body.theme-dark .upload-font-btn:active {
-  background: linear-gradient(145deg, #1f2538, #2a3148);
-  box-shadow:
-    inset 2px 2px 5px rgba(0,0,0,0.45),
-    inset -2px -2px 5px rgba(255,255,255,0.03);
-}
-
-body.theme-dark .github-icon {
-  color: #8a9ab8;
-}
-
-body.theme-dark .font-delete-btn {
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.2),
-    inset -1px -1px 2px rgba(0,0,0,0.3),
-    3px 3px 8px rgba(0,0,0,0.35);
-}
-
-body.theme-dark #preview-canvas {
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-}
-
-/* ========================= PC 버전 스케줄 입력 ========================= */
 .schedule-input-pc .schedules-list {
   margin-bottom: 20px;
 }
@@ -1632,8 +1388,8 @@ body.theme-dark #preview-canvas {
   padding: 8px 12px;
   border: 1px solid #d0dce6;
   border-radius: 6px;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-family: 'Pretendard', sans-serif;
   background: white;
   transition: all 0.2s ease;
   min-width: 100px;
@@ -1695,7 +1451,7 @@ body.theme-dark #preview-canvas {
 }
 
 .course-times {
-  padding: 16px 18px;
+  padding: 8px 8px;
   background: rgba(255,255,255,0.6);
   border-top: 1px solid rgba(0,0,0,0.05);
   animation: slideDown 0.2s ease;
@@ -1715,9 +1471,9 @@ body.theme-dark #preview-canvas {
 .time-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-  padding: 12px;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 6px;
   background: white;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
@@ -1792,12 +1548,16 @@ body.theme-dark #preview-canvas {
 }
 
 /* 기본값: 데스크톱 표시, 모바일 숨김 */
-.time-input-desktop {
-  display: inline-block;
-}
+@media (min-width: 721px) {
+  .time-input-desktop {
+    display: inline-block !important;
+    visibility: visible !important;
+  }
 
-.time-input-mobile {
-  display: none;
+  .time-input-mobile {
+    display: none !important;
+    visibility: hidden !important;
+  }
 }
 
 /* .time-input은 항상 spinner 표시 */
@@ -1857,7 +1617,6 @@ input[type="number"].time-input::-webkit-inner-spin-button {
 .add-time-btn {
   width: 100%;
   padding: 10px 16px;
-  margin-top: 8px;
   border: 2px dashed #d0dce6;
   border-radius: 8px;
   background: rgba(79, 172, 254, 0.05);
@@ -1908,129 +1667,3 @@ input[type="number"].time-input::-webkit-inner-spin-button {
     inset -2px -2px 4px rgba(255,255,255,0.3);
 }
 
-/* 다크모드 스타일 */
-body.theme-dark .course-card {
-  background: linear-gradient(145deg, #2a3148, #1f2538);
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.04),
-    inset -1px -1px 2px rgba(0,0,0,0.3),
-    5px 5px 12px rgba(0,0,0,0.35),
-    -3px -3px 8px rgba(255,255,255,0.02);
-}
-
-body.theme-dark .course-header:hover {
-  background: linear-gradient(145deg, #3a4558, #2a3148);
-}
-
-body.theme-dark .course-name-input,
-body.theme-dark .course-room-input {
-  background: #1a2238;
-  border-color: #3a4558;
-  color: #e0e7ff;
-}
-
-body.theme-dark .course-name-input:focus,
-body.theme-dark .course-room-input:focus {
-  border-color: #6ea8ff;
-  box-shadow: 0 0 0 3px rgba(110, 168, 255, 0.15);
-}
-
-body.theme-dark .separator {
-  color: #6b7280;
-}
-
-body.theme-dark .expand-icon {
-  color: #9ca3af;
-}
-
-body.theme-dark .course-times {
-  background: rgba(26, 34, 56, 0.6);
-  border-top-color: rgba(255,255,255,0.05);
-}
-
-body.theme-dark .time-row {
-  background: #1a2238;
-  border-color: #3a4558;
-}
-
-body.theme-dark .day-select,
-body.theme-dark .time-input {
-  background-color: #1c2032;
-  color: #b8c2de;
-  border-color: #363c54;
-}
-
-body.theme-dark .day-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%237a8aaa' d='M8 10L3 5h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 16px 16px;
-}
-
-body.theme-dark .time-input {
-  background-color: #1c2032;
-  color: #b8c2de;
-  border-color: #363c54;
-  width: 120px;
-}
-
-body.theme-dark input[type="number"].time-input {
-  -webkit-appearance: auto;
-}
-
-body.theme-dark input[type="number"].time-input::-webkit-outer-spin-button,
-body.theme-dark input[type="number"].time-input::-webkit-inner-spin-button {
-  opacity: 1;
-  display: inline-block;
-}
-
-body.theme-dark .day-select:focus,
-body.theme-dark .time-input:focus {
-  outline: none;
-  border-color: #6ea8ff;
-  box-shadow:
-    inset 3px 3px 6px rgba(0,0,0,0.25),
-    inset -3px -3px 6px rgba(255,255,255,0.04);
-}
-
-body.theme-dark .time-separator,
-body.theme-dark .time-dash {
-  color: #6b7280;
-}
-
-body.theme-dark .add-time-btn {
-  background: rgba(110, 168, 255, 0.05);
-  border-color: #6b7a8a;
-  color: #8aa8d8;
-}
-
-body.theme-dark .add-time-btn:hover {
-  border-color: #6ea8ff;
-  background: rgba(110, 168, 255, 0.1);
-  color: #a8c5ff;
-}
-
-body.theme-dark .add-course-btn {
-  background: linear-gradient(145deg, #1e3a5f, #152d47);
-  border-color: #3a6da8;
-  color: #6ea8ff;
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.04),
-    inset -1px -1px 2px rgba(0,0,0,0.3);
-}
-
-body.theme-dark .add-course-btn:hover {
-  background: linear-gradient(145deg, #152d47, #0f2438);
-  color: #8aa8d8;
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.04),
-    inset -1px -1px 2px rgba(0,0,0,0.3),
-    6px 6px 12px rgba(0,0,0,0.45),
-    -4px -4px 8px rgba(255,255,255,0.03);
-}
-
-body.theme-dark .add-course-btn:active {
-  box-shadow:
-    inset 2px 2px 4px rgba(0,0,0,0.3),
-    inset -2px -2px 4px rgba(255,255,255,0.04);
-}
