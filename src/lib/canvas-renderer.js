@@ -226,22 +226,24 @@ export class TimetableRenderer {
     const shadowCtx = shadowCanvas.getContext('2d');
 
     for (let course of this.courses) {
-      const dayIndex = DAYS.indexOf(course.day);
-      if (dayIndex === -1) continue;
+      for (let timeSlot of course.times) {
+        const dayIndex = DAYS.indexOf(timeSlot.day);
+        if (dayIndex === -1) continue;
 
-      const startTime = parseInt(course.startH) * 60 + parseInt(course.startM);
-      const endTime = parseInt(course.endH) * 60 + parseInt(course.endM);
+        const startTime = parseInt(timeSlot.startH) * 60 + parseInt(timeSlot.startM);
+        const endTime = parseInt(timeSlot.endH) * 60 + parseInt(timeSlot.endM);
 
-      if (startTime >= timeEnd || endTime <= timeStart) continue;
+        if (startTime >= timeEnd || endTime <= timeStart) continue;
 
-      const blockX = x + (dayIndex / DAYS.length) * width + padding;
-      const blockY = y + Math.max(0, ((startTime - timeStart) / timeRange)) * height + padding;
-      const blockWidth = width / DAYS.length - padding * 2;
-      const blockHeight = ((Math.min(endTime, timeEnd) - Math.max(startTime, timeStart)) / timeRange) * height - padding;
+        const blockX = x + (dayIndex / DAYS.length) * width + padding;
+        const blockY = y + Math.max(0, ((startTime - timeStart) / timeRange)) * height + padding;
+        const blockWidth = width / DAYS.length - padding * 2;
+        const blockHeight = ((Math.min(endTime, timeEnd) - Math.max(startTime, timeStart)) / timeRange) * height - padding;
 
-      shadowCtx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
-      this.roundRect(shadowCtx, blockX + shadowOffset, blockY + shadowOffset, blockWidth, blockHeight, radius);
-      shadowCtx.fill();
+        shadowCtx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+        this.roundRect(shadowCtx, blockX + shadowOffset, blockY + shadowOffset, blockWidth, blockHeight, radius);
+        shadowCtx.fill();
+      }
     }
 
     this.ctx.save();
@@ -251,33 +253,35 @@ export class TimetableRenderer {
 
     // 블록 그리기
     for (let course of this.courses) {
-      const dayIndex = DAYS.indexOf(course.day);
-      if (dayIndex === -1) continue;
+      for (let timeSlot of course.times) {
+        const dayIndex = DAYS.indexOf(timeSlot.day);
+        if (dayIndex === -1) continue;
 
-      const startTime = parseInt(course.startH) * 60 + parseInt(course.startM);
-      const endTime = parseInt(course.endH) * 60 + parseInt(course.endM);
+        const startTime = parseInt(timeSlot.startH) * 60 + parseInt(timeSlot.startM);
+        const endTime = parseInt(timeSlot.endH) * 60 + parseInt(timeSlot.endM);
 
-      if (startTime >= timeEnd || endTime <= timeStart) continue;
+        if (startTime >= timeEnd || endTime <= timeStart) continue;
 
-      const blockX = x + (dayIndex / DAYS.length) * width + padding;
-      const blockY = y + Math.max(0, ((startTime - timeStart) / timeRange)) * height + padding;
-      const blockWidth = width / DAYS.length - padding * 2;
-      const blockHeight = ((Math.min(endTime, timeEnd) - Math.max(startTime, timeStart)) / timeRange) * height - padding;
+        const blockX = x + (dayIndex / DAYS.length) * width + padding;
+        const blockY = y + Math.max(0, ((startTime - timeStart) / timeRange)) * height + padding;
+        const blockWidth = width / DAYS.length - padding * 2;
+        const blockHeight = ((Math.min(endTime, timeEnd) - Math.max(startTime, timeStart)) / timeRange) * height - padding;
 
-      // 블록 배경 (라운드 코너)
-      const color = colorMap[course.name];
-      this.ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a / 255})`;
-      this.roundRect(this.ctx, blockX, blockY, blockWidth, blockHeight, radius);
-      this.ctx.fill();
+        // 블록 배경 (라운드 코너)
+        const color = colorMap[course.name];
+        this.ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a / 255})`;
+        this.roundRect(this.ctx, blockX, blockY, blockWidth, blockHeight, radius);
+        this.ctx.fill();
 
-      // 블록 테두리: 박스 색보다 밝게 (파이썬 렌더러와 유사)
-      this.ctx.strokeStyle = `rgba(${Math.min(255, color.r + 40)}, ${Math.min(255, color.g + 40)}, ${Math.min(255, color.b + 40)}, ${borderAlpha})`;
-      this.ctx.lineWidth = borderWidth;
-      this.roundRect(this.ctx, blockX, blockY, blockWidth, blockHeight, radius);
-      this.ctx.stroke();
+        // 블록 테두리: 박스 색보다 밝게 (파이썬 렌더러와 유사)
+        this.ctx.strokeStyle = `rgba(${Math.min(255, color.r + 40)}, ${Math.min(255, color.g + 40)}, ${Math.min(255, color.b + 40)}, ${borderAlpha})`;
+        this.ctx.lineWidth = borderWidth;
+        this.roundRect(this.ctx, blockX, blockY, blockWidth, blockHeight, radius);
+        this.ctx.stroke();
 
-      // 텍스트
-      this.drawCourseText(blockX, blockY, blockWidth, blockHeight, course);
+        // 텍스트 (course 정보 포함)
+        this.drawCourseText(blockX, blockY, blockWidth, blockHeight, course);
+      }
     }
   }
 

@@ -21,43 +21,63 @@ export default function App() {
   const [classes, setClasses] = useState([
     {
       id: Math.random(),
-      day: '월',
       name: '데이터베이스',
-      startH: '10',
-      startM: '00',
-      endH: '11',
-      endM: '30',
-      room: 'N101'
+      room: 'N101',
+      times: [
+        {
+          id: Math.random(),
+          day: '월',
+          startH: '10',
+          startM: '00',
+          endH: '11',
+          endM: '30'
+        }
+      ]
     },
     {
       id: Math.random(),
-      day: '화',
       name: '모바일프로그래밍',
-      startH: '13',
-      startM: '00',
-      endH: '14',
-      endM: '30',
-      room: 'N104'
+      room: 'N104',
+      times: [
+        {
+          id: Math.random(),
+          day: '화',
+          startH: '13',
+          startM: '00',
+          endH: '14',
+          endM: '30'
+        }
+      ]
     },
     {
       id: Math.random(),
-      day: '목',
       name: '웹프로그래밍',
-      startH: '10',
-      startM: '00',
-      endH: '11',
-      endM: '30',
-      room: 'N107'
+      room: 'N107',
+      times: [
+        {
+          id: Math.random(),
+          day: '목',
+          startH: '10',
+          startM: '00',
+          endH: '11',
+          endM: '30'
+        }
+      ]
     },
     {
       id: Math.random(),
-      day: '금',
       name: '네트워크',
-      startH: '14',
-      startM: '00',
-      endH: '15',
-      endM: '30',
-      room: 'N110'
+      room: 'N110',
+      times: [
+        {
+          id: Math.random(),
+          day: '금',
+          startH: '14',
+          startM: '00',
+          endH: '15',
+          endM: '30'
+        }
+      ]
     }
   ]);
   const [textColor, setTextColor] = useState('white');
@@ -247,25 +267,75 @@ export default function App() {
   const addClass = () => {
     const newClass = {
       id: Math.random(),
-      day: '월',
-      name: '',
-      startH: '09',
-      startM: '00',
-      endH: '10',
-      endM: '00',
-      room: ''
+      name: '새 과목',
+      room: '',
+      times: [
+        {
+          id: Math.random(),
+          day: '월',
+          startH: '09',
+          startM: '00',
+          endH: '10',
+          endM: '00'
+        }
+      ]
     };
     setClasses([...classes, newClass]);
   };
 
-  const updateClass = (id, field, value) => {
+  const updateClass = (classId, field, value) => {
     setClasses(classes.map((c) =>
-      c.id === id ? { ...c, [field]: value } : c
+      c.id === classId ? { ...c, [field]: value } : c
     ));
   };
 
-  const deleteClass = (id) => {
-    setClasses(classes.filter((c) => c.id !== id));
+  const deleteClass = (classId) => {
+    setClasses(classes.filter((c) => c.id !== classId));
+  };
+
+  const addTime = (classId) => {
+    setClasses(classes.map((c) =>
+      c.id === classId
+        ? {
+            ...c,
+            times: [
+              ...c.times,
+              {
+                id: Math.random(),
+                day: '월',
+                startH: '09',
+                startM: '00',
+                endH: '10',
+                endM: '00'
+              }
+            ]
+          }
+        : c
+    ));
+  };
+
+  const updateTime = (classId, timeId, field, value) => {
+    setClasses(classes.map((c) =>
+      c.id === classId
+        ? {
+            ...c,
+            times: c.times.map((t) =>
+              t.id === timeId ? { ...t, [field]: value } : t
+            )
+          }
+        : c
+    ));
+  };
+
+  const deleteTime = (classId, timeId) => {
+    setClasses(classes.map((c) =>
+      c.id === classId
+        ? {
+            ...c,
+            times: c.times.filter((t) => t.id !== timeId)
+          }
+        : c
+    ));
   };
 
   const handleBgImage = (e) => {
@@ -421,6 +491,9 @@ export default function App() {
         onAddClass={addClass}
         onUpdateClass={updateClass}
         onDeleteClass={deleteClass}
+        onAddTime={addTime}
+        onUpdateTime={updateTime}
+        onDeleteTime={deleteTime}
       />
 
       <Preview

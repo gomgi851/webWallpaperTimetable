@@ -15,6 +15,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 body {
@@ -208,9 +210,21 @@ h3 {
   font-size: 0.875rem;
 
   -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
   background-color : #ffffff;
   color: #1a1a1a;
+}
+
+/* input[type="number"] - 항상 spinner 표시 */
+.setting-item input[type="number"] {
+  -webkit-appearance: auto;
+}
+
+.setting-item input[type="number"]::-webkit-outer-spin-button,
+.setting-item input[type="number"]::-webkit-inner-spin-button {
+  opacity: 1;
+  display: inline-block;
 }
 
 .setting-item select {
@@ -294,6 +308,7 @@ h3 {
 
 .row select {
   -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
   background-image: url('/arrow.png');
   background-repeat: no-repeat;
@@ -339,6 +354,7 @@ h3 {
 .row select.day-select {
   width: 100%;
   -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
   background-color: #ffffff;
   color: #1a1a1a;
@@ -354,6 +370,7 @@ h3 {
   flex: 1;
   min-width: 60px;
   -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
   background-color: #ffffff;
   color: #1a1a1a;
@@ -640,6 +657,10 @@ button {
   .top-settings-row .color-setting-item {
     min-width: 0;
   }
+
+  .time-input {
+    width: 110px;
+  }
 }
 
 @media (max-width: 720px) {
@@ -800,10 +821,101 @@ button {
     width: 100%;
   }
 
-  .time-inputs span {
-    font-size: 0.78rem;
-    flex: 0 0 10px;
+  .time-input {
+    width: 60px;
+    height: 34px;
+    font-size: 0.75rem;
+    padding: 2px 4px;
+  }
+
+  /* 모바일 입력 방식 */
+  .time-input-mobile {
+    display: inline-block;
+    width: 42px;
+    padding: 4px 6px;
+    font-size: 0.8rem;
     text-align: center;
+  }
+
+  .time-input-desktop {
+    display: none;
+  }
+
+  .time-separator-desktop {
+    display: none;
+  }
+
+  .time-dash-desktop {
+    display: none;
+  }
+
+  .time-dash-mobile {
+    display: inline-block;
+    margin: 0 4px;
+    font-size: 0.8rem;
+  }
+
+  .time-inputs span {
+    font-size: 0.7rem;
+    flex: 0 0 8px;
+    text-align: center;
+  }
+
+  .time-row {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 8px;
+  }
+
+  .delete-time-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .day-select {
+    width: 50px;
+    padding: 0 6px;
+    line-height: 30px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+
+  .course-name-input {
+    flex: 0 1 120px;
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+
+  .course-room-input {
+    flex: 0 1 80px;
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+
+  .course-header {
+    padding: 12px 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+  }
+
+  .course-header-content {
+    flex: 0 1 100%;
+    min-width: 0;
+  }
+
+  .course-actions {
+    gap: 6px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .course-header .delete-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
   }
 
   .mobile-field-label {
@@ -816,6 +928,123 @@ button {
 
   .generate-btn {
     width: 100%;
+  }
+}
+
+/* 600px 이하 더 작은 모바일 */
+@media (max-width: 600px) {
+  .time-input-mobile {
+    width: 37px;
+    padding: 3px 5px;
+    font-size: 0.75rem;
+  }
+
+  .time-dash-mobile {
+    margin: 0 3px;
+    font-size: 0.75rem;
+  }
+
+  .course-name-input {
+    flex: 0 1 100px;
+  }
+
+  .course-room-input {
+    flex: 0 1 70px;
+  }
+
+  .day-select {
+    width: 45px;
+  }
+}
+
+/* 480px 이하 초소형 모바일 */
+@media (max-width: 480px) {
+  .time-input-mobile {
+    width: 32px;
+    padding: 2px 4px;
+    font-size: 0.7rem;
+    height: 28px;
+  }
+
+  .time-dash-mobile {
+    margin: 0 2px;
+    font-size: 0.7rem;
+  }
+
+  .time-inputs {
+    gap: 5px;
+  }
+
+  .course-name-input {
+    flex: 0 1 90px;
+  }
+
+  .course-room-input {
+    flex: 0 1 60px;
+  }
+
+  .day-select {
+    width: 40px;
+    font-size: 0.7rem;
+  }
+
+  .delete-time-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+  }
+}
+
+/* 360px 이하 극소형 모바일 */
+@media (max-width: 360px) {
+  .time-input-mobile {
+    width: 28px;
+    padding: 2px 3px;
+    font-size: 0.65rem;
+    height: 26px;
+  }
+
+  .time-dash-mobile {
+    display: none;
+  }
+
+  .time-inputs {
+    gap: 4px;
+  }
+
+  .course-name-input {
+    flex: 0 1 80px;
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+
+  .course-room-input {
+    flex: 0 1 50px;
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+
+  .day-select {
+    width: 35px;
+    padding: 0 4px;
+    font-size: 0.65rem;
+  }
+
+  .delete-time-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 9px;
+  }
+
+  .course-header .delete-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .course-header {
+    padding: 10px 8px;
+    gap: 6px;
   }
 }
 
@@ -1154,6 +1383,13 @@ body.theme-dark .font-select {
 
 body.theme-dark .setting-item input[type="number"] {
   background-image: none;
+  -webkit-appearance: auto;
+}
+
+body.theme-dark .setting-item input[type="number"]::-webkit-outer-spin-button,
+body.theme-dark .setting-item input[type="number"]::-webkit-inner-spin-button {
+  opacity: 1;
+  display: inline-block;
 }
 
 body.theme-dark .setting-item select:focus,
@@ -1347,4 +1583,454 @@ body.theme-dark .font-delete-btn {
 
 body.theme-dark #preview-canvas {
   box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+/* ========================= PC 버전 스케줄 입력 ========================= */
+.schedule-input-pc .schedules-list {
+  margin-bottom: 20px;
+}
+
+.course-card {
+  background: linear-gradient(145deg, #f9fafc, #f0f3f8);
+  border-radius: 12px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.8),
+    inset -1px -1px 2px rgba(0,0,0,0.05),
+    5px 5px 12px rgba(0,0,0,0.08),
+    -3px -3px 8px rgba(255,255,255,0.9);
+}
+
+.course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.course-header:hover {
+  background: linear-gradient(145deg, #ffffff, #f5f8fc);
+}
+
+.course-header-content {
+  flex: 1;
+}
+
+.course-names {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.course-name-input,
+.course-room-input {
+  flex: 0 1 auto;
+  padding: 8px 12px;
+  border: 1px solid #d0dce6;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  background: white;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.course-name-input {
+  flex: 0 1 200px;
+}
+
+.course-room-input {
+  flex: 0 1 120px;
+}
+
+.course-name-input:focus,
+.course-room-input:focus {
+  outline: none;
+  border-color: #2f6fd6;
+  box-shadow: 0 0 0 3px rgba(47, 111, 214, 0.1);
+}
+
+.separator {
+  color: #9ca3af;
+  font-weight: 300;
+}
+
+.course-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.expand-icon {
+  color: #6b7280;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.course-header .delete-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #fee2e2, #fca5a5);
+  color: #dc2626;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.course-header .delete-btn:hover {
+  background: linear-gradient(145deg, #fca5a5, #f87171);
+  color: #991b1b;
+  transform: scale(1.05);
+}
+
+.course-times {
+  padding: 16px 18px;
+  background: rgba(255,255,255,0.6);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.time-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.time-row:last-of-type:not(:has(+ .add-time-btn)) {
+  margin-bottom: 12px;
+}
+
+.day-select {
+  height: 36px;
+  padding: 0 10px;
+  line-height: 36px;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: 'Pretendard', sans-serif;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('/arrow.png');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px 16px;
+  padding-right: 28px !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 70px;
+}
+
+.day-select:focus {
+  outline: none;
+  border-color: #2f6fd6;
+  box-shadow:
+    inset 3px 3px 6px rgba(0,0,0,0.12),
+    inset -3px -3px 6px rgba(255,255,255,0.8);
+}
+
+.day-select:hover {
+  box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,0.1),
+    inset -2px -2px 5px rgba(255,255,255,0.95);
+}
+
+.time-separator {
+  color: #9ca3af;
+  font-weight: 300;
+  flex-shrink: 0;
+}
+
+.time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.time-input {
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: 'Pretendard', sans-serif;
+  color: #1a1a1a;
+  background: white;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 70px;
+  box-sizing: border-box;
+}
+
+/* 기본값: 데스크톱 표시, 모바일 숨김 */
+.time-input-desktop {
+  display: inline-block;
+}
+
+.time-input-mobile {
+  display: none;
+}
+
+/* .time-input은 항상 spinner 표시 */
+input[type="number"].time-input {
+  -webkit-appearance: auto;
+}
+
+input[type="number"].time-input::-webkit-outer-spin-button,
+input[type="number"].time-input::-webkit-inner-spin-button {
+  opacity: 1;
+  display: inline-block;
+}
+
+.time-input:focus {
+  outline: none;
+  border-color: #2f6fd6;
+  box-shadow:
+    inset 3px 3px 6px rgba(0,0,0,0.12),
+    inset -3px -3px 6px rgba(255,255,255,0.8);
+}
+
+.time-input:hover {
+  box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,0.1),
+    inset -2px -2px 5px rgba(255,255,255,0.95);
+}
+
+.time-dash {
+  color: #9ca3af;
+  margin: 0 4px;
+  font-weight: 300;
+}
+
+.delete-time-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(145deg, #fee2e2, #fca5a5);
+  color: #dc2626;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.delete-time-btn:hover {
+  background: linear-gradient(145deg, #fca5a5, #f87171);
+  color: #991b1b;
+  transform: scale(1.05);
+}
+
+.add-time-btn {
+  width: 100%;
+  padding: 10px 16px;
+  margin-top: 8px;
+  border: 2px dashed #d0dce6;
+  border-radius: 8px;
+  background: rgba(79, 172, 254, 0.05);
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-time-btn:hover {
+  border-color: #2563eb;
+  background: rgba(79, 172, 254, 0.1);
+  color: #1d4ed8;
+}
+
+.add-course-btn {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #4facfe;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #e0f2fe, #bae6fd);
+  color: #0369a1;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.8),
+    inset -1px -1px 2px rgba(0,0,0,0.05);
+}
+
+.add-course-btn:hover {
+  background: linear-gradient(145deg, #bae6fd, #7dd3fc);
+  color: #0c4a6e;
+  transform: translateY(-2px);
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.8),
+    inset -1px -1px 2px rgba(0,0,0,0.05),
+    6px 6px 12px rgba(0,0,0,0.1),
+    -4px -4px 8px rgba(255,255,255,0.9);
+}
+
+.add-course-btn:active {
+  transform: translateY(0);
+  box-shadow:
+    inset 2px 2px 4px rgba(0,0,0,0.1),
+    inset -2px -2px 4px rgba(255,255,255,0.3);
+}
+
+/* 다크모드 스타일 */
+body.theme-dark .course-card {
+  background: linear-gradient(145deg, #2a3148, #1f2538);
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.04),
+    inset -1px -1px 2px rgba(0,0,0,0.3),
+    5px 5px 12px rgba(0,0,0,0.35),
+    -3px -3px 8px rgba(255,255,255,0.02);
+}
+
+body.theme-dark .course-header:hover {
+  background: linear-gradient(145deg, #3a4558, #2a3148);
+}
+
+body.theme-dark .course-name-input,
+body.theme-dark .course-room-input {
+  background: #1a2238;
+  border-color: #3a4558;
+  color: #e0e7ff;
+}
+
+body.theme-dark .course-name-input:focus,
+body.theme-dark .course-room-input:focus {
+  border-color: #6ea8ff;
+  box-shadow: 0 0 0 3px rgba(110, 168, 255, 0.15);
+}
+
+body.theme-dark .separator {
+  color: #6b7280;
+}
+
+body.theme-dark .expand-icon {
+  color: #9ca3af;
+}
+
+body.theme-dark .course-times {
+  background: rgba(26, 34, 56, 0.6);
+  border-top-color: rgba(255,255,255,0.05);
+}
+
+body.theme-dark .time-row {
+  background: #1a2238;
+  border-color: #3a4558;
+}
+
+body.theme-dark .day-select,
+body.theme-dark .time-input {
+  background-color: #1c2032;
+  color: #b8c2de;
+  border-color: #363c54;
+}
+
+body.theme-dark .day-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%237a8aaa' d='M8 10L3 5h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px 16px;
+}
+
+body.theme-dark .time-input {
+  background-color: #1c2032;
+  color: #b8c2de;
+  border-color: #363c54;
+  width: 120px;
+}
+
+body.theme-dark input[type="number"].time-input {
+  -webkit-appearance: auto;
+}
+
+body.theme-dark input[type="number"].time-input::-webkit-outer-spin-button,
+body.theme-dark input[type="number"].time-input::-webkit-inner-spin-button {
+  opacity: 1;
+  display: inline-block;
+}
+
+body.theme-dark .day-select:focus,
+body.theme-dark .time-input:focus {
+  outline: none;
+  border-color: #6ea8ff;
+  box-shadow:
+    inset 3px 3px 6px rgba(0,0,0,0.25),
+    inset -3px -3px 6px rgba(255,255,255,0.04);
+}
+
+body.theme-dark .time-separator,
+body.theme-dark .time-dash {
+  color: #6b7280;
+}
+
+body.theme-dark .add-time-btn {
+  background: rgba(110, 168, 255, 0.05);
+  border-color: #6b7a8a;
+  color: #8aa8d8;
+}
+
+body.theme-dark .add-time-btn:hover {
+  border-color: #6ea8ff;
+  background: rgba(110, 168, 255, 0.1);
+  color: #a8c5ff;
+}
+
+body.theme-dark .add-course-btn {
+  background: linear-gradient(145deg, #1e3a5f, #152d47);
+  border-color: #3a6da8;
+  color: #6ea8ff;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.04),
+    inset -1px -1px 2px rgba(0,0,0,0.3);
+}
+
+body.theme-dark .add-course-btn:hover {
+  background: linear-gradient(145deg, #152d47, #0f2438);
+  color: #8aa8d8;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.04),
+    inset -1px -1px 2px rgba(0,0,0,0.3),
+    6px 6px 12px rgba(0,0,0,0.45),
+    -4px -4px 8px rgba(255,255,255,0.03);
+}
+
+body.theme-dark .add-course-btn:active {
+  box-shadow:
+    inset 2px 2px 4px rgba(0,0,0,0.3),
+    inset -2px -2px 4px rgba(255,255,255,0.04);
 }
