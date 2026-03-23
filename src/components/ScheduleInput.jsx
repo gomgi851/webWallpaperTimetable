@@ -2,7 +2,8 @@
 import { DAYS, HOURS, MINUTES } from '../lib/utils';
 
 const AMPM_OPTIONS = ['오전', '오후'];
-const HOUR_12_OPTIONS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
+const HOUR_12_OPTIONS_AM = ['07', '08', '09', '10', '11'];
+const HOUR_12_OPTIONS_PM = ['12', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11'];
 
 function toPickerValue(hour24, minute) {
   const h = Number.parseInt(hour24, 10);
@@ -11,17 +12,21 @@ function toPickerValue(hour24, minute) {
   const safeHour = Number.isNaN(h) ? 9 : h;
   const safeMinute = Number.isNaN(m) ? '00' : String(Math.max(0, Math.min(55, m))).padStart(2, '0');
 
-  if (safeHour === 0) {
-    return { ampm: '오전', hour12: '12', minute: safeMinute };
-  }
-  if (safeHour < 12) {
+  // 오전: 07:00 ~ 11:59
+  if (safeHour >= 7 && safeHour <= 11) {
     return { ampm: '오전', hour12: String(safeHour).padStart(2, '0'), minute: safeMinute };
   }
+  
+  // 오후: 12:00 ~ 23:59
   if (safeHour === 12) {
     return { ampm: '오후', hour12: '12', minute: safeMinute };
   }
+  if (safeHour >= 13 && safeHour <= 23) {
+    return { ampm: '오후', hour12: String(safeHour - 12).padStart(2, '0'), minute: safeMinute };
+  }
 
-  return { ampm: '오후', hour12: String(safeHour - 12).padStart(2, '0'), minute: safeMinute };
+  // Edge case: 0~6 시간
+  return { ampm: '오전', hour12: '07', minute: safeMinute };
 }
 
 function to24Hour(ampm, hour12) {
@@ -29,9 +34,11 @@ function to24Hour(ampm, hour12) {
   if (Number.isNaN(h)) return '09';
 
   if (ampm === '오전') {
-    return h === 12 ? '00' : String(h).padStart(2, '0');
+    // 오전: 07~11은 그대로
+    return String(h).padStart(2, '0');
   }
 
+  // 오후: 12는 그대로, 1~11은 +12
   return h === 12 ? '12' : String(h + 12).padStart(2, '0');
 }
 
@@ -282,16 +289,18 @@ export default function ScheduleInput({
                 ))}
               </div>
               <div className="mobile-time-picker-column" role="listbox" aria-label="시간">
-                {HOUR_12_OPTIONS.map((hour) => (
+                {(mobilePicker.ampm === '오전' ? HOUR_12_OPTIONS_AM : HOUR_12_OPTIONS_PM).map((hour) => (
                   <button
                     key={hour}
                     type="button"
                     className={`mobile-time-picker-option ${mobilePicker.hour12 === hour ? 'active' : ''}`}
                     onClick={() => {
                       let newAmpm = mobilePicker.ampm;
-                      // 11과 12 사이에서 오전/오후 자동 전환
-                      if ((mobilePicker.hour12 === '11' && hour === '12') || (mobilePicker.hour12 === '12' && hour === '11')) {
-                        newAmpm = mobilePicker.ampm === '오전' ? '오후' : '오전';
+                      // 오전 11에서 오후로, 오후 12에서 오전으로 자동 전환
+                      if (mobilePicker.ampm === '오전' && mobilePicker.hour12 === '11' && hour === '12') {
+                        newAmpm = '오후';
+                      } else if (mobilePicker.ampm === '오후' && mobilePicker.hour12 === '12' && hour === '11') {
+                        newAmpm = '오전';
                       }
                       setMobilePicker((prev) => ({ ...prev, hour12: hour, ampm: newAmpm }));
                     }}
