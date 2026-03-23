@@ -287,7 +287,14 @@ export default function ScheduleInput({
                     key={hour}
                     type="button"
                     className={`mobile-time-picker-option ${mobilePicker.hour12 === hour ? 'active' : ''}`}
-                    onClick={() => setMobilePicker((prev) => ({ ...prev, hour12: hour }))}
+                    onClick={() => {
+                      let newAmpm = mobilePicker.ampm;
+                      // 11과 12 사이에서 오전/오후 자동 전환
+                      if ((mobilePicker.hour12 === '11' && hour === '12') || (mobilePicker.hour12 === '12' && hour === '11')) {
+                        newAmpm = mobilePicker.ampm === '오전' ? '오후' : '오전';
+                      }
+                      setMobilePicker((prev) => ({ ...prev, hour12: hour, ampm: newAmpm }));
+                    }}
                   >
                     {hour}
                   </button>
