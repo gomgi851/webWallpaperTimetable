@@ -88,6 +88,7 @@ export default function App() {
   ]);
 
   const [theme, setTheme] = useState('light');
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
   const [selectedFontId, setSelectedFontId] = useState(DEFAULT_FONT_ID);
   const [customFonts, setCustomFonts] = useState([]);
 
@@ -135,6 +136,9 @@ export default function App() {
         console.error('Failed to load settings:', e);
       }
     }
+
+    // Save only after restored settings have reached React state.
+    setSettingsLoaded(true);
 
     // Load custom fonts from IndexedDB
     getAllFontsFromIDB()
@@ -188,9 +192,10 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (!settingsLoaded) return;
     saveState();
   }, [
-    classes, textColor, hPos, vPos, resolution,
+    settingsLoaded, classes, textColor, hPos, vPos, resolution,
     horizontalSizePercent, verticalSizePercent,
     customWidth, customHeight,
     courseNameFontSize, courseRoomFontSize, labelFontSize,
