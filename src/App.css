@@ -59,6 +59,17 @@ h1 {
   flex: 1;
 }
 
+.app-version {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 0.55em;
+  font-weight: 400;
+  color: inherit;
+  opacity: 0.65;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
 h3 {
   color: #4b5563;
   letter-spacing: 0.3px;

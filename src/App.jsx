@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+import { version } from '../package.json';
 import Toast from './components/Toast';
 import Settings from './components/Settings';
 import ScheduleInput from './components/ScheduleInput';
@@ -359,7 +360,7 @@ export default function App() {
         </div>
       )}
       <div className="app-header">
-        <h1>시간표 배경 생성기</h1>
+        <h1>시간표 배경 생성기 <span className="app-version">v{version}</span></h1>
         <div className="app-header-actions">
           <label
             className="theme-switch"
