@@ -24,7 +24,7 @@ export function convertImportedCourses(rows, makeId = () => crypto.randomUUID())
   if (!selected.length) throw new Error('가져올 수업을 하나 이상 선택해주세요.');
   return selected.map((row, i) => {
     const start = parseTime(row.start), end = parseTime(row.end);
-    if (!['월', '화', '수', '목', '금'].includes(row.day) || !row.name.trim() || start == null || end == null || end <= start) {
+    if (!['월', '화', '수', '목', '금', '토', '일'].includes(row.day) || !row.name.trim() || start == null || end == null || end <= start) {
       throw new Error(`${i + 1}번째 선택 수업의 과목명·요일·시간을 확인해주세요. 시간은 5분 단위이며 종료가 시작보다 늦어야 합니다.`);
     }
     return {id: makeId(), day: row.day, name: formatImportedCourseName(row.name), room: row.roomCode.trim(),

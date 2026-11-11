@@ -44,7 +44,7 @@ export default function TimetableImport({onImport}) {
   return <section className="timetable-import" aria-label="시간표 사진에서 가져오기">
     <div className="import-header">
       <div className="import-heading"><h4>시간표 사진에서 가져오기</h4><span>에브리타임 · AI 인식</span></div>
-      <button type="button" className="bg-file-label" disabled={busy} onClick={()=>fileInputRef.current.click()}>파일 선택</button>
+      <button type="button" className="bg-file-label" data-ui-action="timetable" disabled={busy} onClick={()=>fileInputRef.current.click()}>파일 선택</button>
           <input hidden ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" aria-label="인식할 시간표 사진" disabled={busy} onChange={e=>{chooseFile(e.target.files[0]);e.target.value='';}}/>
     </div>
     <div className={`import-body${progress!==null?' has-progress':''}`}>

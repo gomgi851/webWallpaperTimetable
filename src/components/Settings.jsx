@@ -74,7 +74,7 @@ export default function Settings({
         <div className="setting-item">
           <label>배경 선택</label>
           <div className="upload-row">
-            <label htmlFor="bg-file-input" className="bg-file-label">
+            <label htmlFor="bg-file-input" className="bg-file-label" data-ui-action="background">
               {bgFileName ? '변경하기' : '파일 선택'}
             </label>
             <input

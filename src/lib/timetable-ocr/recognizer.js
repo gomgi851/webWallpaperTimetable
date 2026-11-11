@@ -1,5 +1,5 @@
 import {detectGeometry,calibrateTime,blockTimes,pixel} from './geometry.js';
-export const weekdays=['월','화','수','목','금'];
+export const weekdays=['월','화','수','목','금','토','일'];
 export const flattenLines = data => (data.blocks||[]).flatMap(b=>b.paragraphs.flatMap(p=>p.lines));
 export async function recognizeLines(crop,worker,makeCanvas) {
   const {width,height}=crop,ctx=crop.getContext('2d'),d=ctx.getImageData(0,0,width,height).data,groups=[];

@@ -9,7 +9,7 @@ export function detectGeometry(image) {
   for(let y=0;y<h;y+=3) {
     let start=0, color=pixel(image,0,y);
     for(let x=1;x<=w;x++) { const c=x<w?pixel(image,x,y):[0,0,0];
-      if(x===w||distance(c,color)>4) { if(x-start>w*.14&&x-start<w*.23&&courseColor(color))runs.push({x:start,y,width:x-start,color}); start=x;color=c; }
+      if(x===w||distance(c,color)>4) { if(x-start>w*.105&&x-start<w*.23&&courseColor(color))runs.push({x:start,y,width:x-start,color}); start=x;color=c; }
     }
   }
   if(runs.length<5)throw new Error('수업 칸을 찾지 못했습니다. 시간표 전체가 나온 원본 사진을 선택해주세요.');
@@ -18,10 +18,13 @@ export function detectGeometry(image) {
   const full=runs.filter(r=>Math.abs(r.width-mode)<6);
   let colWidth=median(full.map(r=>r.width))+2;
   const anchors=full.map(r=>{let x=r.x;while(x>w*.13)x-=colWidth;return x;}).filter(x=>x>w*.025&&x<w*.13);
-  let left=median(anchors),right=left+5*colWidth;
+  let left=median(anchors);
+  // Flat text rows can shorten the initial run estimate. Validate only after
+  // connected components have refined the column pitch.
+  let dayCount=Math.max(5,Math.min(7,Math.round((w*.98-left)/colWidth))),right=left+dayCount*colWidth;
   const palette=[];for(const r of full)if(!palette.some(c=>distance(c,r.color)<8))palette.push(r.color);
   let blocks=[];
-  for(let day=0;day<5;day++) {
+  for(let day=0;day<dayCount;day++) {
     const x=left+day*colWidth;let active=null;
     for(let y=0;y<h;y++) {
       const colors=Array.from({length:37},(_,i)=>pixel(image,x+colWidth*(.04+i*.025),y));
@@ -34,15 +37,18 @@ export function detectGeometry(image) {
     if(active&&h-active.y>h*.016)blocks.push({...active,height:h-active.y,clipped:true});
   }
   // Connected flat-color regions preserve the outer cell boundary despite text holes.
-  let components=colorComponents(image).filter(b=>b.width>w*.13&&b.width<w*.25&&b.height>h*.015);
+  let components=colorComponents(image).filter(b=>b.width>w*.105&&b.width<w*.25&&b.height>h*.015);
   if(components.length>=4){
     const xs=groups(components.map(b=>b.x).sort((a,b)=>a-b),8),spacings=[];
     for(let i=0;i<xs.length;i++)for(let j=i+1;j<xs.length;j++){const d=xs[j]-xs[i],steps=Math.round(d/colWidth);if(steps>0&&Math.abs(d/steps-colWidth)<colWidth*.12)spacings.push(d/steps);}
     if(spacings.length)colWidth=median(spacings);
-    left=median(components.map(b=>b.x-Math.round((b.x-w*.075)/colWidth)*colWidth));right=left+5*colWidth;
-    components=colorComponents(image,{left,colWidth}).filter(b=>b.width>w*.13&&b.width<w*.25&&b.height>h*.015);
-    blocks=components.flatMap(b=>splitRegion(image,b)).map(b=>({...b,day:Math.max(0,Math.min(4,Math.round((b.x-left)/colWidth)))}));
+    left=median(components.map(b=>b.x-Math.round((b.x-w*.075)/colWidth)*colWidth));
+    dayCount=inferDayCount(w,left,colWidth);right=left+dayCount*colWidth;
+    components=colorComponents(image,{left,colWidth}).filter(b=>b.width>w*.105&&b.width<w*.25&&b.height>h*.015);
+    blocks=components.flatMap(b=>splitRegion(image,b)).map(b=>({...b,day:Math.round((b.x-left)/colWidth)}));
+    if(blocks.some(b=>b.day<0||b.day>=dayCount))throw new Error('요일 열을 확인하지 못했습니다. 시간표 전체가 나온 사진을 선택해주세요.');
   }
+  dayCount=inferDayCount(w,left,colWidth);right=left+dayCount*colWidth;
   const firstY=Math.min(...blocks.map(b=>b.y)),lastY=Math.max(...blocks.map(b=>b.y+b.height));
   const lineRows=[];
   for(let y=Math.max(4,firstY-h*.12)|0;y<Math.min(h-4,lastY+h*.03);y++) {
@@ -57,7 +63,16 @@ export function detectGeometry(image) {
   const origin=lines.find(v=>v>=firstY-hourHeight*.15) ?? firstY;
   const alignedLines=lines.filter(y=>Math.abs((y-origin)/hourHeight-Math.round((y-origin)/hourHeight))<.08);
   const top=Math.min(...alignedLines),bottom=Math.max(...alignedLines);
-  return {left,right,colWidth,top,bottom,hourHeight,lines:alignedLines,blocks:blocks.filter(b=>b.y>=top-5&&b.y<bottom+hourHeight),imageWidth:w,imageHeight:h};
+  return {left,right,colWidth,dayCount,top,bottom,hourHeight,lines:alignedLines,blocks:blocks.filter(b=>b.y>=top-5&&b.y<bottom+hourHeight),imageWidth:w,imageHeight:h};
+}
+
+// Everytime's complete table spans the screenshot, including its time gutter.
+// Reject unsupported/cropped column layouts instead of moving classes to Friday.
+function inferDayCount(width,left,colWidth) {
+  const count=(width*.98-left)/colWidth,rounded=Math.round(count);
+  if(!Number.isFinite(count)||rounded<5||rounded>7||Math.abs(count-rounded)>.18)
+    throw new Error('요일 열을 확인하지 못했습니다. 시간표 전체가 나온 사진을 선택해주세요.');
+  return rounded;
 }
 
 function colorComponents(image,grid=null) {
@@ -104,7 +119,17 @@ export function calibrateTime(lines, geometry) {
 
 export function blockTimes(block,g,startHour) {
   if(startHour==null)return {startMinutes:null,endMinutes:null};
-  const start=startHour*60+(block.y-g.top)/g.hourHeight*60;
-  const end=startHour*60+(block.y+block.height-g.top)/g.hourHeight*60;
+  // Use local grid spacing: screenshot scaling can make successive hours differ
+  // by a pixel, and rounded table corners can create duplicate line candidates.
+  const ticks=new Map();
+  for(const y of g.lines||[]){const index=Math.round((y-g.top)/g.hourHeight);if(!ticks.has(index))ticks.set(index,[]);ticks.get(index).push(y);}
+  const anchors=[...ticks].map(([index,ys])=>({index,y:median(ys)})).sort((a,b)=>a.y-b.y);
+  const minutesAt=y=>{
+    if(anchors.length<2)return startHour*60+(y-g.top)/g.hourHeight*60;
+    let i=anchors.findIndex(a=>a.y>=y);if(i<0)i=anchors.length-1;i=Math.max(1,i);
+    const a=anchors[i-1],b=anchors[i];
+    return startHour*60+(a.index+(y-a.y)/(b.y-a.y)*(b.index-a.index))*60;
+  };
+  const start=minutesAt(block.y),end=minutesAt(block.y+block.height);
   return {startMinutes:Math.round(start/5)*5,endMinutes:Math.round(end/5)*5};
 }

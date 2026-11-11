@@ -6,7 +6,7 @@ test('maps reviewed OCR fields into wallpaper course schema; ignores unselected 
  assert.deepEqual(convertImportedCourses([course,{selected:false}],()=> 'new-id'),[{id:'new-id',day:'수',name:'이산수학',room:'L311',startH:'14',startM:'00',endH:'15',endM:'30'}]);
 });
 test('rejects unknown, backwards, off-grid and invalid times without inventing defaults',()=>{
- for(const edit of [{start:''},{end:''},{end:'13:00'},{end:'15:32'},{start:'24:00'},{day:'토'},{name:''}])assert.throws(()=>convertImportedCourses([{...course,...edit}]));
+ for(const edit of [{start:''},{end:''},{end:'13:00'},{end:'15:32'},{start:'24:00'},{day:'미상'},{name:''}])assert.throws(()=>convertImportedCourses([{...course,...edit}]));
  assert.throws(()=>convertImportedCourses([{...course,selected:false}]));
  assert.equal(formatTime(null),'');assert.equal(formatTime(870),'14:30');
 });

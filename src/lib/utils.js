@@ -1,5 +1,9 @@
 // 날짜 관련 유틸리티
-export const DAYS = ['월', '화', '수', '목', '금'];
+export const DAYS = ['월', '화', '수', '목', '금', '토', '일'];
+export function getVisibleDays(courses = []) {
+  const last = Math.max(4, ...courses.map(course => DAYS.indexOf(course.day)));
+  return DAYS.slice(0, last + 1);
+}
 export const HOURS = Array.from({ length: 16 }, (_, i) => String(i + 7).padStart(2, '0'));
 export const MINUTES = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, '0'));
 
@@ -46,15 +50,15 @@ export function getTimeRange(startH, startM, endH, endM) {
 }
 
 // 시간과 요일로부터 위치 계산
-export function calculatePosition(day, start, end, gridWidth, gridHeight, timeStart = 420, timeEnd = 1020) {
+export function calculatePosition(day, start, end, gridWidth, gridHeight, timeStart = 420, timeEnd = 1020, days = getVisibleDays([{day}])) {
   // timeStart = 7:00 (420분), timeEnd = 17:00 (1020분)
-  const dayIndex = DAYS.indexOf(day);
-  const x = dayIndex / DAYS.length * gridWidth;
+  const dayIndex = days.indexOf(day);
+  const x = dayIndex / days.length * gridWidth;
   
   const timeRange = timeEnd - timeStart;
   const y = (start - timeStart) / timeRange * gridHeight;
   
-  const width = gridWidth / DAYS.length;
+  const width = gridWidth / days.length;
   const height = ((end - start) / timeRange) * gridHeight;
   
   return { x, y, width, height };

@@ -1,4 +1,4 @@
-import { DAYS } from './utils.js';
+import { getVisibleDays } from './utils.js';
 
 export class TimetableRenderer {
   constructor(canvas, bgImage, courses, textColor, hPos, vPos, horizontalSizePercent, verticalSizePercent, courseNameFontSize = 20, courseRoomFontSize = 15, labelFontSize = 14, paletteColors, fontFamily = 'Cafe24 Surround') {
@@ -6,6 +6,7 @@ export class TimetableRenderer {
     this.ctx = canvas.getContext('2d');
     this.bgImage = bgImage;
     this.courses = courses;
+    this.days = getVisibleDays(courses);
     this.textColor = textColor === 'white' ? [255, 255, 255] : [30, 30, 30];
     this.hPos = hPos;
     this.vPos = vPos;
@@ -139,8 +140,8 @@ export class TimetableRenderer {
     this.ctx.lineWidth = Math.max(2, Math.round(2.5 * renderScale));
     
     // 세로 선 (요일)
-    for (let i = 0; i <= DAYS.length; i++) {
-      const lineX = x + (i / DAYS.length) * width;
+    for (let i = 0; i <= this.days.length; i++) {
+      const lineX = x + (i / this.days.length) * width;
       this.ctx.beginPath();
       this.ctx.moveTo(lineX, y);
       this.ctx.lineTo(lineX, y + height);
@@ -178,10 +179,10 @@ export class TimetableRenderer {
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
 
-    for (let i = 0; i < DAYS.length; i++) {
-      const labelX = x + ((i + 0.5) / DAYS.length) * width;
+    for (let i = 0; i < this.days.length; i++) {
+      const labelX = x + ((i + 0.5) / this.days.length) * width;
       const labelY = y - 30;
-      this.ctx.fillText(DAYS[i], labelX, labelY);
+      this.ctx.fillText(this.days[i], labelX, labelY);
     }
 
     // 시간 레이블
@@ -229,7 +230,7 @@ export class TimetableRenderer {
     const shadowCtx = shadowCanvas.getContext('2d');
 
     for (let course of this.courses) {
-      const dayIndex = DAYS.indexOf(course.day);
+      const dayIndex = this.days.indexOf(course.day);
       if (dayIndex === -1) continue;
 
       const startTime = parseInt(course.startH) * 60 + parseInt(course.startM);
@@ -237,9 +238,9 @@ export class TimetableRenderer {
 
       if (startTime >= timeEnd || endTime <= timeStart) continue;
 
-      const blockX = x + (dayIndex / DAYS.length) * width + padding;
+      const blockX = x + (dayIndex / this.days.length) * width + padding;
       const blockY = y + Math.max(0, ((startTime - timeStart) / timeRange)) * height + padding;
-      const blockWidth = width / DAYS.length - padding * 2;
+      const blockWidth = width / this.days.length - padding * 2;
       const blockHeight = ((Math.min(endTime, timeEnd) - Math.max(startTime, timeStart)) / timeRange) * height - padding;
 
       shadowCtx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
@@ -254,7 +255,7 @@ export class TimetableRenderer {
 
     // 블록 그리기
     for (let course of this.courses) {
-      const dayIndex = DAYS.indexOf(course.day);
+      const dayIndex = this.days.indexOf(course.day);
       if (dayIndex === -1) continue;
 
       const startTime = parseInt(course.startH) * 60 + parseInt(course.startM);
@@ -262,9 +263,9 @@ export class TimetableRenderer {
 
       if (startTime >= timeEnd || endTime <= timeStart) continue;
 
-      const blockX = x + (dayIndex / DAYS.length) * width + padding;
+      const blockX = x + (dayIndex / this.days.length) * width + padding;
       const blockY = y + Math.max(0, ((startTime - timeStart) / timeRange)) * height + padding;
-      const blockWidth = width / DAYS.length - padding * 2;
+      const blockWidth = width / this.days.length - padding * 2;
       const blockHeight = ((Math.min(endTime, timeEnd) - Math.max(startTime, timeStart)) / timeRange) * height - padding;
 
       // 블록 배경 (라운드 코너)

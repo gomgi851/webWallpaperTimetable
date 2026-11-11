@@ -112,6 +112,7 @@ export default function Preview({
     <>
       <div className="generate-wrapper">
         <button
+          data-ui-action="generate"
           className={`generate-btn ${isBusy ? 'is-busy' : ''}`}
           onClick={handleGenerate}
           disabled={isBusy}
