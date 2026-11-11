@@ -129,8 +129,9 @@ export class TimetableRenderer {
 
     // 그리드 색상: 첫 번째 색상(대표색) 기반, 매우 투명하게
     const dominantColor = this.colors[0];
-    const majorAlpha = Math.min(0.22, 0.08 + 0.03 * (renderScale - 1));
-    const minorAlpha = Math.min(0.12, majorAlpha * 0.5);
+    const baseMajorAlpha = Math.min(0.22, 0.08 + 0.03 * (renderScale - 1));
+    const majorAlpha = baseMajorAlpha + 0.05;
+    const minorAlpha = Math.min(0.12, baseMajorAlpha * 0.5) + 0.05;
     const gridColor = `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, ${majorAlpha})`;
     const gridColorHalf = `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, ${minorAlpha})`;
     
@@ -184,16 +185,18 @@ export class TimetableRenderer {
     }
 
     // 시간 레이블
-    this.ctx.font = `${Math.max(10, this.labelFontSize - 2)}px ${this.fontFamily}, sans-serif`;
+    const timeFontSize = Math.max(10, this.labelFontSize - 2);
+    this.ctx.font = `${timeFontSize}px ${this.fontFamily}, sans-serif`;
     this.ctx.textAlign = 'right';
     this.ctx.textBaseline = 'middle';
 
     const hourCount = Math.max(1, Math.round((timeEnd - timeStart) / 60));
     const startHour = Math.floor(timeStart / 60);
+    const timeLabelOffsetY = Math.round(timeFontSize * 0.3);
 
     for (let h = 0; h <= hourCount; h++) {
       const hour = startHour + h;
-      const labelY = y + (h / hourCount) * height;
+      const labelY = y + (h / hourCount) * height + timeLabelOffsetY;
       this.ctx.fillText(`${hour}:00`, x - 15, labelY);
     }
   }

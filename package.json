@@ -1,20 +1,26 @@
 {
   "name": "webwallpapertimetable",
-  "version": "1.0.13",
+  "version": "1.1.1",
   "description": "React + Vite 기반 시간표 배경 생성기",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "setup:ocr": "node scripts/setup-timetable-ocr.mjs",
+    "prebuild": "npm run setup:ocr",
+    "test": "node --test test/*.test.js",
+    "predev": "npm run setup:ocr"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@vitejs/plugin-react": "^6.0.1",
+    "onnxruntime-web": "1.22.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "tesseract.js": "6.0.1",
     "vite": "^8.0.0"
   }
 }

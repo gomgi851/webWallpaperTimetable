@@ -6,6 +6,7 @@ import Settings from './components/Settings';
 import ScheduleInput from './components/ScheduleInput';
 import Preview from './components/Preview';
 import { RESOLUTIONS, extractPaletteFromImageAsync } from './lib/utils';
+import { getResolutionDefaults, getWallpaperDefaults } from './lib/wallpaper-defaults';
 import {
   DEFAULT_FONT_ID,
   DEFAULT_FONT_FAMILY,
@@ -66,7 +67,7 @@ export default function App() {
   const [vPos, setVPos] = useState('top');
   const [resolution, setResolution] = useState('fhd');
   const [horizontalSizePercent, setHorizontalSizePercent] = useState(39);
-  const [verticalSizePercent, setVerticalSizePercent] = useState(70);
+  const [verticalSizePercent, setVerticalSizePercent] = useState(77);
   const [customWidth, setCustomWidth] = useState(1920);
   const [customHeight, setCustomHeight] = useState(1080);
   const [bgImage, setBgImage] = useState(null);
@@ -76,7 +77,7 @@ export default function App() {
   const [isBgProcessing, setIsBgProcessing] = useState(false);
   const [courseNameFontSize, setCourseNameFontSize] = useState(20);
   const [courseRoomFontSize, setCourseRoomFontSize] = useState(15);
-  const [labelFontSize, setLabelFontSize] = useState(14);
+  const [labelFontSize, setLabelFontSize] = useState(18);
   const [toastMessage, setToastMessage] = useState(null);
   const [toastType, setToastType] = useState('info');
   const [paletteColors, setPaletteColors] = useState([
@@ -113,18 +114,19 @@ export default function App() {
     if (saved) {
       try {
         const data = JSON.parse(saved);
+        const defaults = getResolutionDefaults(data.resolution);
         setClasses(data.classes || []);
         setTextColor(data.textColor || 'white');
         setHPos(data.hPos || 'right');
         setVPos(data.vPos || 'top');
         setResolution(data.resolution || 'fhd');
-        setHorizontalSizePercent(data.horizontalSizePercent || 39);
-        setVerticalSizePercent(data.verticalSizePercent || 70);
+        setHorizontalSizePercent(data.horizontalSizePercent || defaults.horizontalSizePercent);
+        setVerticalSizePercent(data.verticalSizePercent || defaults.verticalSizePercent);
         setCustomWidth(data.customWidth || 1920);
         setCustomHeight(data.customHeight || 1080);
-        setCourseNameFontSize(data.courseNameFontSize || 20);
-        setCourseRoomFontSize(data.courseRoomFontSize || 15);
-        setLabelFontSize(data.labelFontSize || 14);
+        setCourseNameFontSize(data.courseNameFontSize || defaults.courseNameFontSize);
+        setCourseRoomFontSize(data.courseRoomFontSize || defaults.courseRoomFontSize);
+        setLabelFontSize(data.labelFontSize || defaults.labelFontSize);
 
         const savedTheme = data.theme || 'light';
         setTheme(savedTheme);
@@ -162,6 +164,22 @@ export default function App() {
         console.error('Failed to load fonts from IDB:', err);
       });
   }, []);
+
+  // Keep the quality dropdown and initial sizing tied to the loaded source,
+  // including an image already present during a development refresh.
+  useEffect(() => {
+    if (!bgImage) return;
+    const defaults = getWallpaperDefaults(
+      bgImage.naturalWidth || bgImage.width,
+      bgImage.naturalHeight || bgImage.height
+    );
+    setResolution(defaults.resolution);
+    setLabelFontSize(defaults.labelFontSize);
+    setCourseNameFontSize(defaults.courseNameFontSize);
+    setCourseRoomFontSize(defaults.courseRoomFontSize);
+    setHorizontalSizePercent(defaults.horizontalSizePercent);
+    setVerticalSizePercent(defaults.verticalSizePercent);
+  }, [bgImage]);
 
   // 개발 도구용: window.showToast 노출
   useEffect(() => {
@@ -274,6 +292,10 @@ export default function App() {
     setClasses(classes.filter((c) => c.id !== id));
   };
 
+  const importClasses = (courses, mode) => {
+    setClasses(previous => mode === 'replace' ? courses : [...previous, ...courses]);
+  };
+
   const handleBgImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -307,8 +329,8 @@ export default function App() {
         try {
           if (bgProcessTokenRef.current !== currentToken) return;
           setBgImage(img);
-          setBgImageOriginalWidth(img.width);
-          setBgImageOriginalHeight(img.height);
+          setBgImageOriginalWidth(img.naturalWidth || img.width);
+          setBgImageOriginalHeight(img.naturalHeight || img.height);
           await new Promise((resolve) => requestAnimationFrame(resolve));
 
           const palette = await extractPaletteFromImageAsync(img, 8, 10);
@@ -327,6 +349,14 @@ export default function App() {
   };
 
   const handleResolutionChange = (newResolution) => {
+    if (['fhd', 'qhd', 'uhd'].includes(newResolution)) {
+      const defaults = getResolutionDefaults(newResolution);
+      setLabelFontSize(defaults.labelFontSize);
+      setCourseNameFontSize(defaults.courseNameFontSize);
+      setCourseRoomFontSize(defaults.courseRoomFontSize);
+      setHorizontalSizePercent(defaults.horizontalSizePercent);
+      setVerticalSizePercent(defaults.verticalSizePercent);
+    }
     if (newResolution === 'custom') {
       if (resolution === 'original') {
         setCustomWidth(bgImageOriginalWidth);
@@ -427,6 +457,7 @@ export default function App() {
         onAddClass={addClass}
         onUpdateClass={updateClass}
         onDeleteClass={deleteClass}
+        onImportClasses={importClasses}
       />
 
       <Preview

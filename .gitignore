@@ -3,6 +3,7 @@ node_modules/
 venv/
 env/
 dist/
+public/timetable-ocr/
 build/
 *.log
 .DS_Store

@@ -1,10 +1,12 @@
 import React from 'react';
 import { DAYS, HOURS, MINUTES } from '../lib/utils';
+import TimetableImport from './TimetableImport';
 
-export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDeleteClass }) {
+export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDeleteClass, onImportClasses }) {
   return (
     <div className="card">
       <h3>2. 수업 정보 입력</h3>
+      <TimetableImport onImport={onImportClasses} />
       <div className="header-row">
         <div>요일</div>
         <div>강의명</div>
@@ -12,7 +14,7 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
         <div>강의실</div>
         <div></div>
       </div>
-      <div className="name-break-hint">강의명/강의실은 띄어쓰기를 넣으면 줄바꿈되며 최대 2줄까지 표시돼요.</div>
+      <div className="name-break-hint"><span className="name-break-highlight">강의명/강의실은 띄어쓰기를 넣으면 줄바꿈</span>되며 최대 2줄까지 표시돼요.</div>
       
       <div id="schedules-container">
         {classes.map((course) => (
@@ -43,7 +45,7 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
                 value={course.startH}
                 onChange={(e) => onUpdateClass(course.id, 'startH', e.target.value)}
               >
-                {HOURS.map(h => (
+                {[...new Set([...HOURS, course.startH])].sort().map(h => (
                   <option key={h} value={h}>{h}</option>
                 ))}
               </select>
@@ -62,7 +64,7 @@ export default function ScheduleInput({ classes, onAddClass, onUpdateClass, onDe
                 value={course.endH}
                 onChange={(e) => onUpdateClass(course.id, 'endH', e.target.value)}
               >
-                {HOURS.map(h => (
+                {[...new Set([...HOURS, course.endH])].sort().map(h => (
                   <option key={h} value={h}>{h}</option>
                 ))}
               </select>

@@ -1,0 +1,38 @@
+.timetable-import{margin:0 0 20px;border:1px solid #e8e8e8;border-radius:10px;text-align:left;font-family:'Pretendard',sans-serif;color:#4b5563}
+.import-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px}
+.import-heading{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;min-width:0}
+.import-heading h4{margin:0;font-family:'Do Hyeon',sans-serif!important;font-size:1.1rem;font-weight:400;line-height:1.4;color:#4b5563}
+.import-heading span{font-size:.8rem;font-weight:400;color:#6b7280}
+.import-body{padding:0 14px}.import-body.has-progress{padding-bottom:14px}.import-body p{font-size:.85rem;line-height:1.6}
+.timetable-import .bg-file-label{border:0;font-family:'Pretendard',sans-serif}
+.import-header>.bg-file-label{margin-left:auto;flex-shrink:0}
+.timetable-import .bg-file-label:disabled{opacity:.5;cursor:default;transform:none}
+.timetable-import .bg-file-label:focus-visible{outline:2px solid #5279c6;outline-offset:3px}
+.import-cancel{margin-top:10px}
+body.theme-dark .timetable-import{border-color:#363c54;color:#b8c2de}
+body.theme-dark .import-heading h4{color:#8fa0c2}
+body.theme-dark .import-heading span{color:#7a8aaa}
+.name-break-hint .name-break-highlight{color:#2f6fd6}
+body.theme-dark .name-break-hint .name-break-highlight{color:#8aa8d8}
+@media(max-width:600px){.import-header{padding:12px;gap:8px}.import-heading{gap:4px}.import-heading h4{font-size:1rem}.import-heading span{font-size:.72rem}.import-body{padding-left:12px;padding-right:12px}}
+
+.import-progress{display:flex;align-items:center;gap:12px;margin:16px 0 4px}
+.import-progress progress{appearance:none;-webkit-appearance:none;display:block;width:100%;height:10px;border:0;border-radius:999px;overflow:hidden;background:#dce3ef;accent-color:#5279c6}
+.import-progress progress::-webkit-progress-bar{background:#dce3ef;border-radius:999px}
+.import-progress progress::-webkit-progress-value{background:#5279c6;border-radius:999px;transition:width .2s ease}
+.import-progress progress::-moz-progress-bar{background:#5279c6;border-radius:999px}
+.import-progress span{min-width:3.5ch;text-align:right;font-size:.85rem;font-variant-numeric:tabular-nums}
+body.theme-dark .import-progress progress,body.theme-dark .import-progress progress::-webkit-progress-bar{background:#30394b}
+body.theme-dark .import-progress progress::-webkit-progress-value{background:#86a9ee}
+body.theme-dark .import-progress progress::-moz-progress-bar{background:#86a9ee}
+.import-progress.is-complete progress{accent-color:#2e9b60}
+.import-progress.is-complete progress::-webkit-progress-value{background:#2e9b60}
+.import-progress.is-complete progress::-moz-progress-bar{background:#2e9b60}
+.import-progress.is-complete span{color:#27834f}
+body.theme-dark .import-progress.is-complete progress{accent-color:#66bb8a}
+body.theme-dark .import-progress.is-complete progress::-webkit-progress-value{background:#66bb8a}
+body.theme-dark .import-progress.is-complete progress::-moz-progress-bar{background:#66bb8a}
+body.theme-dark .import-progress.is-complete span{color:#66bb8a}
+.import-error{max-width:380px;width:calc(100% - 40px);border:1px solid #cbd2df;border-radius:14px;padding:24px;background:#f8f9fc;color:#1a1a1a;box-shadow:0 16px 60px #0004}
+.import-error::backdrop{background:#0007}.import-error h4{margin:0 0 12px}.import-error button{float:right;min-width:70px}
+body.theme-dark .import-error{background:#242a34;border-color:#48515e;color:#e2e8f0}
