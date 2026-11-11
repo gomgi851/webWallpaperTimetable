@@ -337,7 +337,6 @@ export default function App() {
           const palette = await extractPaletteFromImageAsync(img, 8, 10);
           if (bgProcessTokenRef.current !== currentToken) return;
           setPaletteColors(palette.blockColors);
-          setTextColor(palette.textColor);
           showToast('배경화면 생성 준비 완료.', 'success');
         } finally {
           if (bgProcessTokenRef.current !== currentToken) return;

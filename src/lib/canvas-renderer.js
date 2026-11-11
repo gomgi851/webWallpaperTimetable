@@ -128,13 +128,13 @@ export class TimetableRenderer {
   drawGrid(x, y, width, height, timeStart, timeEnd) {
     const renderScale = Math.max(1, (this.canvas.width / 1920));
 
-    // 그리드 색상: 첫 번째 색상(대표색) 기반, 매우 투명하게
-    const dominantColor = this.colors[0];
+    // 그리드도 사용자가 선택한 표 색상을 따릅니다.
+    const [r, g, b] = this.textColor;
     const baseMajorAlpha = Math.min(0.22, 0.08 + 0.03 * (renderScale - 1));
     const majorAlpha = baseMajorAlpha + 0.05;
     const minorAlpha = Math.min(0.12, baseMajorAlpha * 0.5) + 0.05;
-    const gridColor = `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, ${majorAlpha})`;
-    const gridColorHalf = `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, ${minorAlpha})`;
+    const gridColor = `rgba(${r}, ${g}, ${b}, ${majorAlpha})`;
+    const gridColorHalf = `rgba(${r}, ${g}, ${b}, ${minorAlpha})`;
     
     this.ctx.strokeStyle = gridColor;
     this.ctx.lineWidth = Math.max(2, Math.round(2.5 * renderScale));
@@ -354,7 +354,7 @@ export class TimetableRenderer {
     if (roomCount > 0) {
       currentY += gap;
       this.ctx.font = `${this.courseRoomFontSize}px ${this.fontFamily}, sans-serif`;
-      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      this.ctx.fillStyle = `rgba(${this.textColor[0]}, ${this.textColor[1]}, ${this.textColor[2]}, 0.7)`;
       for (let i = 0; i < roomCount; i++) {
         this.ctx.fillText(wrappedRoomLines[i], x + width / 2, currentY);
         currentY += roomLineHeight;
