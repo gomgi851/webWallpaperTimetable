@@ -65,7 +65,7 @@ export default function App() {
   const [textColor, setTextColor] = useState('white');
   const [hPos, setHPos] = useState('right');
   const [vPos, setVPos] = useState('top');
-  const [resolution, setResolution] = useState('fhd');
+  const [resolution, setResolution] = useState('original');
   const [horizontalSizePercent, setHorizontalSizePercent] = useState(39);
   const [verticalSizePercent, setVerticalSizePercent] = useState(77);
   const [customWidth, setCustomWidth] = useState(1920);
@@ -119,7 +119,8 @@ export default function App() {
         setTextColor(data.textColor || 'white');
         setHPos(data.hPos || 'right');
         setVPos(data.vPos || 'top');
-        setResolution(data.resolution || 'fhd');
+        // Background images are not restored, so each visit starts at source quality.
+        setResolution('original');
         setHorizontalSizePercent(data.horizontalSizePercent || defaults.horizontalSizePercent);
         setVerticalSizePercent(data.verticalSizePercent || defaults.verticalSizePercent);
         setCustomWidth(data.customWidth || 1920);
@@ -358,11 +359,11 @@ export default function App() {
       setVerticalSizePercent(defaults.verticalSizePercent);
     }
     if (newResolution === 'custom') {
-      if (resolution === 'original') {
+      if (resolution === 'original' && bgImage) {
         setCustomWidth(bgImageOriginalWidth);
         setCustomHeight(bgImageOriginalHeight);
       } else {
-        const currentRes = RESOLUTIONS[resolution];
+        const currentRes = RESOLUTIONS[resolution]?.width ? RESOLUTIONS[resolution] : RESOLUTIONS.fhd;
         setCustomWidth(currentRes.width);
         setCustomHeight(currentRes.height);
       }
@@ -373,6 +374,12 @@ export default function App() {
         showToast('배경화면 이미지를 먼저 선택해주세요.', 'warning');
         return;
       }
+      const defaults = getWallpaperDefaults(bgImage.naturalWidth || bgImage.width, bgImage.naturalHeight || bgImage.height);
+      setLabelFontSize(defaults.labelFontSize);
+      setCourseNameFontSize(defaults.courseNameFontSize);
+      setCourseRoomFontSize(defaults.courseRoomFontSize);
+      setHorizontalSizePercent(defaults.horizontalSizePercent);
+      setVerticalSizePercent(defaults.verticalSizePercent);
     }
 
     setResolution(newResolution);

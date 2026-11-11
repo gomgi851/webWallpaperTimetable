@@ -1,1 +1,10 @@
-OCR: Tesseract.js (https://github.com/naptha/tesseract.js), Tesseract.js-core and Tesseract OCR. Models: tessdata_best (https://github.com/tesseract-ocr/tessdata_best). These components are distributed under the Apache License 2.0; see accompanying license files.
+Third-party OCR and model notices
+
+Tesseract.js 6.0.1 and Tesseract.js-core 6.1.2: https://github.com/naptha/tesseract.js and https://github.com/naptha/tesseract.js-core . Apache License 2.0; preserve their included license files and the npm dependency notice collection.
+Tesseract OCR: https://github.com/tesseract-ocr/tesseract . Apache License 2.0.
+Leptonica: Copyright (C) 2001-2020 Leptonica. BSD-2-Clause; see Leptonica-BSD-2-Clause.txt.
+Korean/English OCR weights: tessdata_best, https://github.com/tesseract-ocr/tessdata_best . Apache License 2.0.
+EasyOCR: https://github.com/JaidedAI/EasyOCR . Apache License 2.0. The english_g2 VGG/BiLSTM/CTC checkpoint was modified by fine-tuning for classroom codes and exported as room-code-v2.onnx by gomgi851/timetable-recognizer. See MODEL_CARD.md for sources, modifications, hashes and limitations. This is a modified model, not an unmodified upstream EasyOCR checkpoint.
+ONNX Runtime Web 1.22.0: Copyright (c) Microsoft Corporation. MIT License. See ONNX-Runtime-LICENSE.txt and ONNX-Runtime-ThirdPartyNotices.txt for upstream and bundled third-party terms.
+
+This application changes asset URLs, browser orchestration/progress, title spacing and import behavior around these components. It does not modify the shipped Tesseract/ONNX runtime binaries or tessdata_best weights. Original author rights are retained.

@@ -1,0 +1,53 @@
+{
+  "verifiedOn": "2026-11-11",
+  "sources": [
+    {
+      "file": "fonts/DoHyeon-OFL-1.1.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/dohyeon/OFL.txt",
+      "bytes": 4347,
+      "sha256": "de5ff32211a4340b01477af39ee339d639438955e409f79b666d4b9207f3c92c"
+    },
+    {
+      "file": "fonts/Pretendard-OFL-1.1.txt",
+      "source": "https://raw.githubusercontent.com/orioncactus/pretendard/main/LICENSE",
+      "bytes": 4816,
+      "sha256": "82e9c8a4b203261f10ddba1296422d64914ff3d4b7bd8a12896d03f0f088d70a"
+    },
+    {
+      "file": "fonts/BlackHanSans-OFL-1.1.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/blackhansans/OFL.txt",
+      "bytes": 4399,
+      "sha256": "c324192c8b3a988bae45a9a7e4ac1258b684739003bda114e0523423440457c9"
+    },
+    {
+      "file": "timetable-ocr/Tesseract-APACHE-2.0.txt",
+      "source": "https://raw.githubusercontent.com/tesseract-ocr/tesseract/main/LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "file": "timetable-ocr/Leptonica-BSD-2-Clause.txt",
+      "source": "https://raw.githubusercontent.com/DanBloomberg/leptonica/master/leptonica-license.txt",
+      "bytes": 1521,
+      "sha256": "87829abb5bbb00b55a107365da89e9a33f86c4250169e5a1e5588505be7d5806"
+    },
+    {
+      "file": "timetable-ocr/ONNX-Runtime-ThirdPartyNotices.txt",
+      "source": "https://raw.githubusercontent.com/microsoft/onnxruntime/v1.22.0/ThirdPartyNotices.txt",
+      "bytes": 326866,
+      "sha256": "e9e90971a8e75a9a8ac0c6412e29c1202d079998389915aa485f46c816c3b4cc"
+    },
+    {
+      "file": "fonts/Cafe24-Ssurround-License.pdf",
+      "source": "https://img.cafe24.com/csdstatic/freefonts/download/kr/Cafe24Ssurround-v2.0.zip",
+      "bytes": 1945706,
+      "sha256": "de2158b3dc8aa27513451108fb09088f9afd8fce1d65c2cac29c7e554b37a7d9"
+    },
+    {
+      "file": "fonts/Cafe24-Ssurround-OFL-1.1.txt",
+      "source": "https://img.cafe24.com/csdstatic/freefonts/download/kr/Cafe24Ssurround-v2.0.zip",
+      "bytes": 4535,
+      "sha256": "8176174f60422afa688921eaa05abada35de2572598324e1636e030f829838de"
+    }
+  ]
+}

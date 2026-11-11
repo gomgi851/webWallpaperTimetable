@@ -145,7 +145,6 @@ export default function Settings({
           <input
             type="number"
             min="8"
-            max="40"
             value={labelFontSize}
             onChange={(e) => onLabelFontSizeChange(parseInt(e.target.value))}
           />
@@ -155,7 +154,6 @@ export default function Settings({
           <input
             type="number"
             min="8"
-            max="40"
             value={courseNameFontSize}
             onChange={(e) => onCourseNameFontSizeChange(parseInt(e.target.value))}
           />
@@ -165,7 +163,6 @@ export default function Settings({
           <input
             type="number"
             min="8"
-            max="40"
             value={courseRoomFontSize}
             onChange={(e) => onCourseRoomFontSizeChange(parseInt(e.target.value))}
           />

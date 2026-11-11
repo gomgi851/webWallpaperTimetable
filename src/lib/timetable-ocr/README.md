@@ -10,3 +10,5 @@ Vendored from gomgi851/timetable-recognizer commit 33477cd. Geometry, OCR prepro
 - `npm run setup:ocr` installs binaries, validating all SHA-256 hashes in assets.json.
 - Images and private evaluation fixtures must never be placed in public/ or committed.
 - Upstream licenses and notices: public/licenses/timetable-ocr/ (Apache-2.0; ONNX Runtime MIT).
+
+Detailed upstream attribution, model modifications and licenses: ../../../THIRD_PARTY_NOTICES.md and public/licenses/timetable-ocr/MODEL_CARD.md (repository root).
