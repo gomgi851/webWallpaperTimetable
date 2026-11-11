@@ -2,6 +2,8 @@
 
 React + Vite 기반의 현대적인 시간표 배경 생성 웹 애플리케이션입니다.
 
+**🌐 사이트 바로가기:** [시간표 배경 생성기](https://webwallpapertimetable-dev.pages.dev/)
+
 **버전:** v1.1.3
 
 ## ✨ 주요 기능
